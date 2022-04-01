@@ -56,6 +56,10 @@ public class Transaction {
 		SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
 		Date date = new Date(System.currentTimeMillis());
 		System.out.println(formatter.format(date));
+		float CurrentSold = account.getSold();
+		float NewSold = account.getSold() + amount;
+		account.setSold(NewSold);
+		
 		return  new Transaction(1,Descript,user,amount,date);
 	}
 	
@@ -70,7 +74,7 @@ public class Transaction {
 			float CurrentSold = account.getSold();
 			float NewSold = account.getSold() - amount;
 			//new Transaction(1,Descript,user,NewSold,date);
-			
+			account.setSold(NewSold);
 			new Transaction(1,Descript,user,amount,date);
 			  
 			return true;
