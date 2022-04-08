@@ -42,7 +42,7 @@ public class Signin extends JFrame{
 		panelEnd.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		
 		JButton signIn = new JButton();
-		signIn.setText("Crée sont compte");
+		signIn.setText("Créer son compte");
 		
 		JButton logIn = new JButton();
 		logIn.setText("Connexion");

@@ -20,7 +20,7 @@ public class MenuBar extends JMenuBar{
 	}
 	
 	public void MenuOuvrireCompte() {
-		ouvrireComp = new JMenu("Ouvrire un compte");
+		ouvrireComp = new JMenu("Ouvrir un compte");
 		
 		this.add(ouvrireComp);
 	}
