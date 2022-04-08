@@ -1,6 +1,8 @@
 package View;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -23,7 +25,7 @@ public class Signin extends JFrame{
 	public Signin() {
 		gbc = new GridBagConstraints();
 		
-		this.setTitle("Connexion");
+		this.setTitle("Inscription");
 		
 		container = new JPanel();
 		container.setLayout(new BorderLayout());
@@ -43,9 +45,15 @@ public class Signin extends JFrame{
 		
 		JButton signIn = new JButton();
 		signIn.setText("Créer son compte");
+		signIn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		
 		JButton logIn = new JButton();
 		logIn.setText("Connexion");
+		logIn.setBorderPainted(false);
+		logIn.setBorder(null);
+		logIn.setContentAreaFilled(false);
+		logIn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		logIn.setForeground(Color.blue);
 		
 		panelEnd.add(logIn);
 		panelEnd.add(signIn);

@@ -1,6 +1,8 @@
 package View;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -23,7 +25,7 @@ public class Login extends JFrame{
 	public Login() {
 		gbc = new GridBagConstraints();
 		
-		this.setTitle("Inscription");
+		this.setTitle("Connexion");
 		
 		container = new JPanel();
 		container.setLayout(new BorderLayout());
@@ -42,13 +44,16 @@ public class Login extends JFrame{
 		panelEnd.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		
 		JButton signIn = new JButton();
-		signIn.setText("Crée sont compte");
+		signIn.setText("Créer sont compte");
 		signIn.setBorderPainted(false);
 		signIn.setBorder(null);
 		signIn.setContentAreaFilled(false);
+		signIn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		signIn.setForeground(Color.blue);
 		
 		JButton logIn = new JButton();
 		logIn.setText("Connexion");
+		logIn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		
 		panelEnd.add(signIn);
 		panelEnd.add(logIn);
@@ -59,7 +64,7 @@ public class Login extends JFrame{
 	public void setMainPanel() {
 		mainPanel = new JPanel();
 		mainPanel.setLayout(new GridBagLayout());
-		
+				
 		JLabel lbl_prenom = new JLabel("Prénom");
 		JLabel lbl_nom = new JLabel("Nom");
 		JLabel lbl_mail = new JLabel("Mail");
@@ -82,7 +87,7 @@ public class Login extends JFrame{
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		mainPanel.add(txt_mail, gbc);
-
+		
 		gbc.gridwidth = 2;
 		gbc.gridx = 0;
 		gbc.gridy = 2;
