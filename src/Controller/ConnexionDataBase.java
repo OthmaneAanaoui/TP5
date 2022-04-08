@@ -1,10 +1,12 @@
-package Model;
+package Controller;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import Model.User;
 
 public class ConnexionDataBase {
 	Connection connexion;
