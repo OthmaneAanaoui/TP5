@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class Transaction {
 	int  id;
-	String name = "";
+	String name;
 	User user;
 	float montant;
 	Date date;

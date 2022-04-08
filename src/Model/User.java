@@ -1,9 +1,9 @@
 package Model;
 
 public class User {
-	 public int  id;
+	 public int  id, numberAccount;
      public String FirstName,LastName,
-        email,passeword;
+        email,password;
      
      public  float Sold;
 
@@ -23,14 +23,14 @@ public class User {
 	 * @param passeword
 	 * @param sold
 	 */
-	public User(int id, String firstName, String lastName, String email, String passeword, float sold) {
+	public User(int id, String firstName, String lastName, String email, String passeword) {
 		super();
 		this.id = id;
 		FirstName = firstName;
 		LastName = lastName;
 		this.email = email;
-		this.passeword = passeword;
-		Sold = sold;
+		this.password = passeword;
+		//Sold = sold;
 	}
 
 	/**
@@ -92,15 +92,15 @@ public class User {
 	/**
 	 * @return the passeword
 	 */
-	public String getPasseword() {
-		return passeword;
+	public String getPassword() {
+		return password;
 	}
 
 	/**
 	 * @param passeword the passeword to set
 	 */
-	public void setPasseword(String passeword) {
-		this.passeword = passeword;
+	public void setPassword(String passeword) {
+		this.password = passeword;
 	}
 
 	/**

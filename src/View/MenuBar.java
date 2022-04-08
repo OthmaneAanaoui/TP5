@@ -7,7 +7,7 @@ import javax.swing.JMenuItem;
 public class MenuBar extends JMenuBar{
 	private JMenu ouvrireComp;
 	private JMenu consulterCompte;
-	
+	private JMenu option;
 	
 	public MenuBar() {
 		this.BuildMenu();
@@ -16,10 +16,11 @@ public class MenuBar extends JMenuBar{
 	public void BuildMenu() {
 		this.MenuOuvrireCompte();
 		this.MenuConsulterCompte();
+		this.MenuOption();
 	}
 	
 	public void MenuOuvrireCompte() {
-		ouvrireComp = new JMenu("Options");
+		ouvrireComp = new JMenu("Ouvrir un compte");
 		
 		this.add(ouvrireComp);
 	}
@@ -36,5 +37,17 @@ public class MenuBar extends JMenuBar{
 		consulterCompte.add(retirer);
 		
 		this.add(consulterCompte);
+	}
+	
+	public void MenuOption() {
+		JMenuItem aPorpos = new JMenuItem("A propos");
+		JMenuItem deconexion = new JMenuItem("Déconexion");
+		
+		option = new JMenu("Options");
+		
+		option.add(aPorpos);
+		option.add(deconexion);
+		
+		this.add(option);
 	}
 }
