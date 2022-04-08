@@ -11,7 +11,9 @@ public class controller {
 		Signin signin = new Signin();
 		Login login = new Login();
 		
-		login.setVisible(true);
-		signin.setVisible(true);
+		mainView.setVisible(true);
+		
+		//login.setVisible(true);
+		//signin.setVisible(true);
 	}
 }
