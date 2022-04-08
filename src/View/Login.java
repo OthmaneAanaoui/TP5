@@ -7,6 +7,8 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -15,14 +17,20 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import Controller.ControllerButton;
+
 public class Login extends JFrame{
 	private JPanel container;
 	private JPanel panelEnd;
 	private JPanel mainPanel;
+	private ControllerButton controllerButton;
+	JTextField txt_mail;
+	JPasswordField txt_mdp;
 
 	private GridBagConstraints gbc;
 	
 	public Login() {
+		this.controllerButton = new ControllerButton();
 		gbc = new GridBagConstraints();
 		
 		this.setTitle("Connexion");
@@ -55,6 +63,15 @@ public class Login extends JFrame{
 		logIn.setText("Connexion");
 		logIn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		
+		logIn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				controllerButton.connexion(txt_mail.getText(),txt_mdp.getText());
+			}
+		});
+		
 		panelEnd.add(signIn);
 		panelEnd.add(logIn);
 		
@@ -72,8 +89,8 @@ public class Login extends JFrame{
 		
 		JTextField txt_prenom = new JTextField();
 		JTextField txt_nom = new JTextField();
-		JTextField txt_mail = new JTextField();
-		JPasswordField txt_mdp = new JPasswordField();
+		txt_mail = new JTextField();
+		txt_mdp = new JPasswordField();
 		
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(10,35,5,35);
