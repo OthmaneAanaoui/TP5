@@ -42,12 +42,12 @@ public class ConnexionDataBase {
 	public User getUserByEmailAndPassword(String email, String password) {
 		User user = null;
 		try {
-			ResultSet res = statement.executeQuery("SELECT * FROM \"public\".\"User\" WHERE email = "+ email + " AND password = " + password+";");
+			ResultSet res = statement.executeQuery("SELECT id, firstName, lastName, email, password FROM \"public\".\"User\" WHERE \"email\" Like \""+ email + "\" AND password = \"" + password+"\";");
 			
 			while(res.next()) {
 				//System.out.println("");
 				//System.out.println(res.getString("Nom"));
-				user = new User(res.getInt("id"),res.getString("firstName"), res.getString("lastName"), res.getString("email"), res.getString("password"));
+				//user = new User(res.getInt("id"),res.getString("firstName"), res.getString("lastName"), res.getString("email"), res.getString("password"));
 			}
 			res.close();
 		} catch (SQLException e) {
