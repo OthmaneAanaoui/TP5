@@ -10,11 +10,12 @@ public class controller {
 	static Login login;
 	public static void main(String[] args) {
 		mainView = new MainView();
-
-		signin = new Signin();
-		login = new Login();
-		//mainView.setVisible(true);
-		login.setVisible(true);
+		mainView.setVisible(true);
+		
+		//signin = new Signin();
 		//signin.setVisible(true);
+		
+		//login = new Login();
+		//login.setVisible(true);
 	}
 }

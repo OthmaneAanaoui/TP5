@@ -1,6 +1,7 @@
 package View;
 
 import java.awt.BorderLayout;
+import java.awt.GridBagLayout;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -17,17 +18,21 @@ public class MainView extends JFrame{
 		retraitPopUp = new RetraitPopUp(container);
 		
 		this.setTitle("Giuchet Auto");
+		
 		container = new JPanel();
 		container.setLayout(new BorderLayout());
 		
+		this.consulterCompte = new ConsulterCompte();
 		this.OuvrirCompte = new OuvrirCompte();
 		
-		container.add(OuvrirCompte);
+		container.add(consulterCompte, BorderLayout.SOUTH);
+		// container.add(OuvrirCompte);
 		
 		this.setJMenuBar(new MenuBar());
 		this.add(container);
 		
 		this.setSize(600, 600);
+		this.setLocationRelativeTo(null);
 	}
 
 	public DepotPopUp getDepotPopUp() {
@@ -45,7 +50,4 @@ public class MainView extends JFrame{
 	public void setRetraitPopUp(RetraitPopUp retraitPopUp) {
 		this.retraitPopUp = retraitPopUp;
 	}
-	
-	
-	
 }
