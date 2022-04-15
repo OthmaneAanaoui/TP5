@@ -1,16 +1,23 @@
 package View;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+
+import Controller.ControllerButton;
 
 public class MenuBar extends JMenuBar{
 	private JMenu ouvrireComp;
 	private JMenu consulterCompte;
 	private JMenu option;
+	private ControllerButton controllerButton;
 	
 	public MenuBar() {
 		this.BuildMenu();
+		this.controllerButton = new ControllerButton();
 	}	
 	
 	public void BuildMenu() {
@@ -42,11 +49,22 @@ public class MenuBar extends JMenuBar{
 	public void MenuOption() {
 		JMenuItem aPorpos = new JMenuItem("A propos");
 		JMenuItem deconexion = new JMenuItem("Déconexion");
+		JMenuItem quitter = new JMenuItem("Quitter");
 		
 		option = new JMenu("Options");
 		
 		option.add(aPorpos);
 		option.add(deconexion);
+		option.add(quitter);
+		
+		quitter.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				controllerButton.quitter();
+			}
+		});
 		
 		this.add(option);
 	}
