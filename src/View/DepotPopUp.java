@@ -28,7 +28,7 @@ public class DepotPopUp {
 	}
 	
 	public void showPopUp() {
-		int choix = JOptionPane.showConfirmDialog(container, popUpTab, "Dépot", JOptionPane.OK_CANCEL_OPTION);
+		int choix = JOptionPane.showConfirmDialog(container, popUpTab, "Dépot", JOptionPane.OK_CANCEL_OPTION, JOptionPane.CLOSED_OPTION);
 		
 		if (choix == JOptionPane.OK_OPTION) {
 			System.out.println("it's okay");

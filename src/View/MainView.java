@@ -9,8 +9,12 @@ public class MainView extends JFrame{
 	private JPanel container;
 	private ConsulterCompte consulterCompte;
 	private OuvrirCompte OuvrirCompte;
+	private DepotPopUp depotPopUp;
 	
 	public MainView() {
+		depotPopUp = new DepotPopUp(container);
+		depotPopUp.showPopUp();
+		
 		this.setTitle("Giuchet Auto");
 		container = new JPanel();
 		container.setLayout(new BorderLayout());

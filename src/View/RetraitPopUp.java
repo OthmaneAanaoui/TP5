@@ -1,5 +1,9 @@
 package View;
 
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -27,8 +31,8 @@ public class RetraitPopUp  {
 		popUpTab = new Object[] {lblChoixCompte, choixCompte, lblMontantDepot, txtMontantDepot, lblSolde, txtSolde};
 	}
 	
-	public void showPopUp() {
-		int choix = JOptionPane.showConfirmDialog(container, popUpTab, "Retrait", JOptionPane.OK_CANCEL_OPTION);
+	public void showPopUp() {		
+		int choix = JOptionPane.showConfirmDialog(container, popUpTab, "Retrait", JOptionPane.OK_CANCEL_OPTION, JOptionPane.CLOSED_OPTION);
 		
 		if (choix == JOptionPane.OK_OPTION) {
 			System.out.println("it's okay");
