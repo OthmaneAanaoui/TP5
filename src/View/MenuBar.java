@@ -2,6 +2,8 @@ package View;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -28,6 +30,41 @@ public class MenuBar extends JMenuBar{
 	
 	public void MenuOuvrireCompte() {
 		ouvrireComp = new JMenu("Ouvrir un compte");
+		
+		ouvrireComp.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				controllerButton.switchPanel("ouvrirCompte");
+				System.out.println("hey");
+			}
+		});
+		
 		
 		this.add(ouvrireComp);
 	}
@@ -58,6 +95,15 @@ public class MenuBar extends JMenuBar{
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				controllerButton.showRetrait();
+			}
+		});
+		
+		consulter.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				controllerButton.switchPanel("consulterCompte");
 			}
 		});
 		

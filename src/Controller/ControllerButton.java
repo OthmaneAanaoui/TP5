@@ -76,8 +76,25 @@ public class ControllerButton {
 		controller.mainView.getRetraitPopUp().showPopUp();
 	}
 	
-	public void switchPanel(JPanel jPanel ) {
-		jPanel.setVisible(true);
+	public void switchPanel(String panel) {
+		switch (panel) {
+		case "ouvrirCompte":
+			controller.mainView.getConsulterCompte().setVisible(false);
+			controller.mainView.getOuvrirCompte().setVisible(true);
+			break;
+		case "consulterCompte":
+			controller.mainView.getOuvrirCompte().setVisible(false);
+			controller.mainView.getConsulterCompte().setVisible(true);
+			break;
+		case "aPropos":
+			controller.mainView.getOuvrirCompte().setVisible(false);
+			controller.mainView.getConsulterCompte().setVisible(false);
+			
+			break;
+		default:
+			break;
+		}
+		
 	}
 	
 }

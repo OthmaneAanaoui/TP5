@@ -25,7 +25,7 @@ public class MainView extends JFrame{
 		this.consulterCompte = new ConsulterCompte();
 		this.OuvrirCompte = new OuvrirCompte();
 		
-		// container.add(consulterCompte, BorderLayout.SOUTH);
+		container.add(consulterCompte, BorderLayout.SOUTH);
 		container.add(OuvrirCompte);
 		
 		this.setJMenuBar(new MenuBar());
