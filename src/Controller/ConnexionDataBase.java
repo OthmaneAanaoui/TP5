@@ -5,7 +5,12 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 
+import Model.Account;
+import Model.Type;
 import Model.User;
 
 public class ConnexionDataBase {
@@ -38,6 +43,23 @@ public class ConnexionDataBase {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public User getUserById(int id) {
+		User user = null;
+		try {
+			ResultSet res = statement.executeQuery("SELECT * FROM \"public\".\"User\" WHERE id ="+id);
+			
+			while(res.next()) {
+				user = new User(res.getInt("id"),res.getString("firstName"), res.getString("lastName"), res.getString("email"), res.getString("password"));
+			}
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return user;
 	}
 	
 	public User getUserByEmailAndPassword(String email, String password) {
@@ -78,11 +100,13 @@ public class ConnexionDataBase {
 	
 	public boolean createAccount(int idUser, String type, float floor) {
 		boolean isCreated = false;
+		
 		try {
 			int res = statement.executeUpdate("INSERT INTO \"public\".\"Account\" (\"id\",\"id_user\",\"type\",\"sold\",\"floor\")\r\n"
 					+ "					VALUES (nextval('\"User_id_seq\"'::regclass),"+ idUser +",'"+ type +"',"+ 0 +","+ floor +")");
 			if(res == 1) {
 				System.out.println("account créé");
+				
 				isCreated = true;
 			}
 			
@@ -93,5 +117,47 @@ public class ConnexionDataBase {
 		return isCreated;
 	}
 	
+	public boolean createTransaction(String name,int idUser, float montant) {
+		boolean isCreated = false;
+		Date date = new Date();
+		Account account = getLastAccount(idUser);
+		try {
+			int res = statement.executeUpdate("INSERT INTO \"public\".\"Transaction\" (\"id\",\"name\",\"id_account\",\"montant\",\"date\")\r\n"
+					+ "					VALUES (nextval('\"User_id_seq\"'::regclass),"+ name +",'"+ account.id +"',"+ montant +",'"+date+"')");
+			if(res == 1) {
+				System.out.println("Transaction créé");
+				////account = new Account(, res, null, null, res)
+				isCreated = true;
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return isCreated;
+	}
 	
+	public Account getLastAccount(int id) {
+		Account account = null;
+		try {
+			ResultSet res = statement.executeQuery("SELECT max(id) FROM \"public\".\"Account\" WHERE id_user = '{"+id+"}' LIMIT 1");
+			
+			while(res.next()) {
+				ArrayList<Integer> array = (ArrayList<Integer>) res.getArray("id_user").getArray();
+				User[] users = null;
+				for (Integer integer : array) {
+					User user = getUserById(integer);
+					users[integer] = user;
+				}
+				Type type = Type.valueOf(res.getString("type"));
+				account = new Account(res.getInt("id"), users , type , res.getFloat("floor"));
+			}
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return account;
+	}
 }

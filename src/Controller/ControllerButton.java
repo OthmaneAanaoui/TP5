@@ -1,5 +1,7 @@
 package Controller;
 
+import javax.swing.JPanel;
+
 import Model.User;
 
 public class ControllerButton {
@@ -38,10 +40,10 @@ public class ControllerButton {
 		}
 	}
 	
-	public void addAccount(String type, float floor) {
+	public void addAccount(String type, float floor, float montantTransaction, String user2) {
 		boolean isOk = connexionDataBase.createAccount(user.id, type, floor);
-		if(isOk) {
-			
+		if(isOk && montantTransaction > 0) {
+			connexionDataBase.createTransaction("depot", user.id, montantTransaction);
 		}
 	}
 	
@@ -72,6 +74,10 @@ public class ControllerButton {
 	
 	public void showRetrait() {
 		controller.mainView.getRetraitPopUp().showPopUp();
+	}
+	
+	public void switchPanel(JPanel jPanel ) {
+		jPanel.setVisible(true);
 	}
 	
 }

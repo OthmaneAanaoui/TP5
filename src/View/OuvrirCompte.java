@@ -46,7 +46,15 @@ public class OuvrirCompte extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				controllerButton.addAccount(cb_typeCompte.getSelectedItem().toString(), 0);
+				float floor;
+				try {
+					floor = Float.parseFloat(txt_plafondNegatif.getText()) ;
+				} catch (Exception e2) {
+					// TODO: handle exception
+					floor = 0;
+				}
+				
+				controllerButton.addAccount(cb_typeCompte.getSelectedItem().toString(), 0, floor, txt_user2.getText());
 			}
 		});
 		
