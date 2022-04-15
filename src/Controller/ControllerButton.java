@@ -21,6 +21,7 @@ public class ControllerButton {
 		}
 		if(user != null) {
 			controller.mainView.setVisible(true);
+			controller.login.setVisible(false);
 		}
 		
 	}
