@@ -4,6 +4,8 @@ import java.awt.Cursor;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -11,11 +13,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import Controller.ControllerButton;
+
 public class OuvrirCompte extends JPanel{
+	private ControllerButton controllerButton;
 	private GridBagConstraints gbc;	
 	
 	public OuvrirCompte() {
 		gbc = new GridBagConstraints();
+		this.controllerButton = new ControllerButton();
 		
 		this.setLayout(new GridBagLayout());
 		
@@ -32,6 +38,15 @@ public class OuvrirCompte extends JPanel{
 		JButton btn_nouveauCompte = new JButton();
 		btn_nouveauCompte.setText("Ouvrir le compte");
 		btn_nouveauCompte.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		
+		btn_nouveauCompte.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				controllerButton.addAccount(cb_typeCompte.getSelectedItem().toString(), 0);
+			}
+		});
 		
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		

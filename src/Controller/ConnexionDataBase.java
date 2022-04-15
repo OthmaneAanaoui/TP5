@@ -76,5 +76,22 @@ public class ConnexionDataBase {
 		return isCreated;
 	}
 	
+	public boolean createAccount(int idUser, String type, float floor) {
+		boolean isCreated = false;
+		try {
+			int res = statement.executeUpdate("INSERT INTO \"public\".\"Account\" (\"id\",\"id_user\",\"type\",\"sold\",\"floor\")\r\n"
+					+ "					VALUES (nextval('\"User_id_seq\"'::regclass),"+ idUser +",'"+ type +"',"+ 0 +","+ floor +")");
+			if(res == 1) {
+				System.out.println("account créé");
+				isCreated = true;
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return isCreated;
+	}
+	
 	
 }

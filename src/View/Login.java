@@ -24,10 +24,10 @@ public class Login extends JFrame{
 	private JPanel panelEnd;
 	private JPanel mainPanel;
 	private ControllerButton controllerButton;
+	private GridBagConstraints gbc;
+	
 	JTextField txt_mail;
 	JPasswordField txt_mdp;
-
-	private GridBagConstraints gbc;
 	
 	public Login() {
 		this.controllerButton = new ControllerButton();
@@ -47,6 +47,32 @@ public class Login extends JFrame{
 		this.setSize(600, 300);
 	}
 	
+	
+	
+	public JTextField getTxt_mail() {
+		return txt_mail;
+	}
+
+
+
+	public void setTxt_mail(JTextField txt_mail) {
+		this.txt_mail = txt_mail;
+	}
+
+
+
+	public JPasswordField getTxt_mdp() {
+		return txt_mdp;
+	}
+
+
+
+	public void setTxt_mdp(JPasswordField txt_mdp) {
+		this.txt_mdp = txt_mdp;
+	}
+
+
+
 	public void btnSignIn() {
 		panelEnd = new JPanel();
 		panelEnd.setLayout(new FlowLayout(FlowLayout.RIGHT));

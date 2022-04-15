@@ -10,10 +10,11 @@ public class MainView extends JFrame{
 	private ConsulterCompte consulterCompte;
 	private OuvrirCompte OuvrirCompte;
 	private DepotPopUp depotPopUp;
+	private RetraitPopUp retraitPopUp;
 	
 	public MainView() {
 		depotPopUp = new DepotPopUp(container);
-		depotPopUp.showPopUp();
+		retraitPopUp = new RetraitPopUp(container);
 		
 		this.setTitle("Giuchet Auto");
 		container = new JPanel();
@@ -28,4 +29,23 @@ public class MainView extends JFrame{
 		
 		this.setSize(600, 600);
 	}
+
+	public DepotPopUp getDepotPopUp() {
+		return depotPopUp;
+	}
+
+	public void setDepotPopUp(DepotPopUp depotPopUp) {
+		this.depotPopUp = depotPopUp;
+	}
+
+	public RetraitPopUp getRetraitPopUp() {
+		return retraitPopUp;
+	}
+
+	public void setRetraitPopUp(RetraitPopUp retraitPopUp) {
+		this.retraitPopUp = retraitPopUp;
+	}
+	
+	
+	
 }

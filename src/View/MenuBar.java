@@ -43,6 +43,24 @@ public class MenuBar extends JMenuBar{
 		consulterCompte.add(deposer);
 		consulterCompte.add(retirer);
 		
+		deposer.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				controllerButton.showDepot();
+			}
+		});
+		
+		retirer.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				controllerButton.showRetrait();
+			}
+		});
+		
 		this.add(consulterCompte);
 	}
 	
@@ -56,6 +74,15 @@ public class MenuBar extends JMenuBar{
 		option.add(aPorpos);
 		option.add(deconexion);
 		option.add(quitter);
+		
+		deconexion.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				controllerButton.deconnexion();
+			}
+		});
 		
 		quitter.addActionListener(new ActionListener() {
 			

@@ -3,9 +3,11 @@ package Controller;
 import Model.User;
 
 public class ControllerButton {
+	
 	User user = null;
 	private ConnexionDataBase connexionDataBase;
 	private controller controller;
+	
 	public ControllerButton() {
 		this.connexionDataBase = new ConnexionDataBase();
 		this.controller = new controller();
@@ -22,6 +24,8 @@ public class ControllerButton {
 		if(user != null) {
 			controller.mainView.setVisible(true);
 			controller.login.setVisible(false);
+			controller.login.getTxt_mail().setText("");
+			controller.login.getTxt_mdp().setText("");
 		}
 		
 	}
@@ -29,7 +33,15 @@ public class ControllerButton {
 	public void inscription(String email, String password, String firstName, String lastName) {
 		boolean isOk = connexionDataBase.createUser(email, password, firstName, lastName);
 		if(isOk) {
-			switchToLogIn();
+			controller.mainView.setVisible(false);
+			controller.login.setVisible(true);
+		}
+	}
+	
+	public void addAccount(String type, float floor) {
+		boolean isOk = connexionDataBase.createAccount(user.id, type, floor);
+		if(isOk) {
+			
 		}
 	}
 	
@@ -45,6 +57,21 @@ public class ControllerButton {
 	
 	public void quitter() {
 		System.exit(0);
+	}
+	
+	public void deconnexion() {
+		//System.exit(0);
+		user = null;
+		controller.mainView.setVisible(false);
+		controller.login.setVisible(true);
+	}
+	
+	public void showDepot() {
+		controller.mainView.getDepotPopUp().showPopUp();
+	}
+	
+	public void showRetrait() {
+		controller.mainView.getRetraitPopUp().showPopUp();
 	}
 	
 }
