@@ -7,6 +7,8 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -15,16 +17,24 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import Controller.ControllerButton;
+
 public class Signin extends JFrame{
 	private JPanel container;
 	private JPanel panelEnd;
 	private JPanel mainPanel;
+	private ControllerButton controllerButton;
 
 	private GridBagConstraints gbc;
 	
+	private JTextField txt_prenom;
+	private JTextField txt_nom;
+	private JTextField txt_mail;
+	private JPasswordField txt_mdp ;
+	
 	public Signin() {
 		gbc = new GridBagConstraints();
-		
+		this.controllerButton = new ControllerButton();
 		this.setTitle("Inscription");
 		
 		container = new JPanel();
@@ -47,6 +57,15 @@ public class Signin extends JFrame{
 		signIn.setText("Créer son compte");
 		signIn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		
+		signIn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				controllerButton.inscription(txt_mail.getText(), txt_mdp.getText(), txt_prenom.getText(), txt_nom.getText());
+			}
+		});
+		
 		JButton logIn = new JButton();
 		logIn.setText("Connexion");
 		logIn.setBorderPainted(false);
@@ -54,6 +73,15 @@ public class Signin extends JFrame{
 		logIn.setContentAreaFilled(false);
 		logIn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		logIn.setForeground(Color.blue);
+		
+		logIn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				controllerButton.switchToLogIn();
+			}
+		});
 		
 		panelEnd.add(logIn);
 		panelEnd.add(signIn);
@@ -70,10 +98,10 @@ public class Signin extends JFrame{
 		JLabel lbl_mail = new JLabel("Mail");
 		JLabel lbl_mdp = new JLabel("Mot de passe");
 		
-		JTextField txt_prenom = new JTextField();
-		JTextField txt_nom = new JTextField();
-		JTextField txt_mail = new JTextField();
-		JPasswordField txt_mdp = new JPasswordField();
+		txt_prenom = new JTextField();
+		txt_nom = new JTextField();
+		txt_mail = new JTextField();
+		txt_mdp = new JPasswordField();
 		
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		

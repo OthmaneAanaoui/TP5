@@ -16,6 +16,7 @@ public class ConnexionDataBase {
 		try {
 			Class.forName("org.postgresql.Driver");
 			connexion = DriverManager.getConnection("jdbc:postgresql://postgresql-ynov.alwaysdata.net:5432/ynov_database","ynov","ynov!3543");
+			System.out.println(connexion);
 			statement = connexion.createStatement();
 			
 		} catch (ClassNotFoundException | SQLException e) {
@@ -58,20 +59,21 @@ public class ConnexionDataBase {
 		return user;
 	}
 	
-	public User createUser(String email, String password, String firstName, String lastName) {
-		User user = null;
+	public boolean createUser(String email, String password, String firstName, String lastName) {
+		boolean isCreated = false;
 		try {
 			int res = statement.executeUpdate("INSERT INTO \"public\".\"User\" (\"id\",\"firstName\",\"lastName\",\"email\",\"password\",\"numberAccount\")\r\n"
-					+ "					VALUES (nextval('\"User_id_seq\"'::regclass),'"+ firstName +"','"+ lastName +"','"+ email +"','"+ password +"',"+ 2 +")");
-			if(res != 1) {
+					+ "					VALUES (nextval('\"User_id_seq\"'::regclass),'"+ firstName +"','"+ lastName +"','"+ email +"','"+ password +"',"+ 0 +")");
+			if(res == 1) {
 				System.out.println("user créé");
+				isCreated = true;
 			}
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return user;
+		return isCreated;
 	}
 	
 	

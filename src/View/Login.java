@@ -59,6 +59,15 @@ public class Login extends JFrame{
 		signIn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		signIn.setForeground(Color.blue);
 		
+		signIn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				controllerButton.switchToSignIn();
+			}
+		});
+		
 		JButton logIn = new JButton();
 		logIn.setText("Connexion");
 		logIn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
