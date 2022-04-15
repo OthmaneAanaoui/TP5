@@ -48,7 +48,7 @@ public class ConnexionDataBase {
 				//System.out.println("");
 				//System.out.println(res.getString("Nom"));
 				user = new User(res.getInt("id"),res.getString("firstName"), res.getString("lastName"), res.getString("email"), res.getString("password"));
-				System.out.println(user);
+				//System.out.println(user);
 			}
 			res.close();
 		} catch (SQLException e) {
