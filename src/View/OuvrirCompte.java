@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -14,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.text.MaskFormatter;
+import javax.swing.text.NumberFormatter;
 
 import Controller.ControllerButton;
 
@@ -29,15 +31,34 @@ public class OuvrirCompte extends JPanel{
 		
 		JLabel lbl_typeCompte = new JLabel("Type de compte");
 		JLabel lbl_user2 = new JLabel("Second utilisateur :");
+		lbl_user2.setVisible(false);
+		
 		JLabel lbl_depot = new JLabel("1er depot :");
-		JLabel lbl_plafondNegatif = new JLabel("Plafon négatif :");
+		JLabel lbl_plafondNegatif = new JLabel("Découvert autorisé :");
+		
+		JComboBox txt_user2 = new JComboBox();
+		txt_user2.setVisible(false);
 		
 		JComboBox cb_typeCompte = new JComboBox(Model.Type.values());
-		JTextField txt_user2 = new JTextField();
+		cb_typeCompte.addActionListener (new ActionListener () {
+		    public void actionPerformed(ActionEvent e) {
+		    	// Compte joint
+		        if(cb_typeCompte.getSelectedIndex() == 1) {
+		        	lbl_user2.setVisible(true);
+		        	txt_user2.setVisible(true);
+		        }
+		        else {
+		        	lbl_user2.setVisible(false);
+		        	txt_user2.setVisible(false);
+		        }
+		    }
+		});
+		
+
 		
 		// ----- add try catch isNumber ---------------------------
-		JFormattedTextField txt_depot = new JFormattedTextField(createFormatter("########.## €"));
-		JFormattedTextField txt_plafondNegatif = new JFormattedTextField(createFormatter("########.## €"));
+		JFormattedTextField txt_depot = new JFormattedTextField(createFormatter(0, -1));
+		JFormattedTextField txt_plafondNegatif = new JFormattedTextField(createFormatter(0, 1000));
 		
 		JButton btn_nouveauCompte = new JButton();
 		btn_nouveauCompte.setText("Ouvrir le compte");
@@ -56,7 +77,7 @@ public class OuvrirCompte extends JPanel{
 					floor = 0;
 				}
 				
-				controllerButton.addAccount(cb_typeCompte.getSelectedItem().toString(), 0, floor, txt_user2.getText());
+				controllerButton.addAccount(cb_typeCompte.getSelectedItem().toString(), 0, floor, txt_user2.getSelectedItem().toString());
 			}
 		});
 		
@@ -108,15 +129,20 @@ public class OuvrirCompte extends JPanel{
 		this.add(btn_nouveauCompte, gbc);
 	}
 	
-	protected MaskFormatter createFormatter(String s) {
-	    MaskFormatter formatter = null;
-	    try {
-	        formatter = new MaskFormatter(s);
-	        
-	    } catch (java.text.ParseException exc) {
-	        System.err.println("formatter is bad: " + exc.getMessage());
-	        System.exit(-1);
-	    }
-	    return formatter;
+	protected NumberFormatter createFormatter(long minValue, long maxValue) {
+		 NumberFormat longFormat = NumberFormat.getIntegerInstance();
+
+		 NumberFormatter numberFormatter = new NumberFormatter(longFormat);
+		 
+		 numberFormatter.setValueClass(Long.class);
+		 
+		 numberFormatter.setAllowsInvalid(true);
+		 
+		 numberFormatter.setMinimum(minValue);
+		 
+		 if (maxValue != -1)
+			 numberFormatter.setMaximum(maxValue);
+		 
+	    return numberFormatter;
 	}
 }

@@ -7,6 +7,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -20,6 +21,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
+import javax.swing.text.NumberFormatter;
 
 import Controller.ControllerButton;
 
@@ -38,7 +40,7 @@ public class ConsulterCompte extends JPanel{
 		JLabel lbl_montantTotal = new JLabel("Solde total : ");
 		JLabel lbl_montantCompte1 = new JLabel("Solde du premier compte : ");
 		JLabel lbl_montantCompte2 = new JLabel("Solde du second comtpe : ");
-		JLabel lbl_plafondNegatif = new JLabel("Plafond négatife : ");
+		JLabel lbl_plafondNegatif = new JLabel("Découvert autorisé : ");
 		JLabel lbl_listOpe = new JLabel("Liste des opérations : ");
 		
 		JTextField txt_montantTotal = new JTextField();
@@ -57,7 +59,7 @@ public class ConsulterCompte extends JPanel{
 		
 		jTable.setModel(dataTable);
 
-		JFormattedTextField txt_plafondNegatif = new JFormattedTextField(createFormatter("- ### €"));
+		JFormattedTextField txt_plafondNegatif = new JFormattedTextField(createFormatter(0, 1000));
 		
 		JButton btn_editPlanfondNegatif = new JButton();
 		btn_editPlanfondNegatif.setText("Valder le plafond");
@@ -68,7 +70,7 @@ public class ConsulterCompte extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String plafond = txt_plafondNegatif.getText();
-				plafond = plafond.replace("-", "").replace("€", "").trim();
+				// plafond = plafond.replace("-", "").replace("€", "").trim();
 				
 				System.out.println(plafond);
 			}
@@ -148,15 +150,17 @@ public class ConsulterCompte extends JPanel{
 		this.add(jScrollPane, gbc);
 	}
 	
-	protected MaskFormatter createFormatter(String s) {
-	    MaskFormatter formatter = null;
-	    try {
-	        formatter = new MaskFormatter(s);
-	        
-	    } catch (java.text.ParseException exc) {
-	        System.err.println("formatter is bad: " + exc.getMessage());
-	        System.exit(-1);
-	    }
-	    return formatter;
+	protected NumberFormatter createFormatter(int minValue, int maxValue) {
+		 NumberFormat longFormat = NumberFormat.getIntegerInstance();
+
+		 NumberFormatter numberFormatter = new NumberFormatter(longFormat);
+		 
+		 numberFormatter.setValueClass(Long.class);
+		 numberFormatter.setMinimum(minValue);
+		 
+		 if (maxValue != -1)
+			 numberFormatter.setMaximum(maxValue);
+		 
+	    return numberFormatter;
 	}
 }
