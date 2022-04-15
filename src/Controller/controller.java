@@ -11,7 +11,6 @@ public class controller {
 	public static void main(String[] args) {
 		mainView = new MainView();
 
-		
 		signin = new Signin();
 		login = new Login();
 		//mainView.setVisible(true);
