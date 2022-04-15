@@ -12,8 +12,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import Controller.ControllerButton;
+
 public class ConsulterCompte extends JPanel{
 	private GridBagConstraints gbc;	
+	private ControllerButton controllerButton;
 	
 	public ConsulterCompte() {
 		gbc = new GridBagConstraints();
