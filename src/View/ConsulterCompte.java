@@ -5,9 +5,12 @@ import java.awt.Cursor;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -16,6 +19,7 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.MaskFormatter;
 
 import Controller.ControllerButton;
 
@@ -52,13 +56,24 @@ public class ConsulterCompte extends JPanel{
 		dataTable.addColumn("Montant");
 		
 		jTable.setModel(dataTable);
+
+		JFormattedTextField txt_plafondNegatif = new JFormattedTextField(createFormatter("- ### €"));
 		
 		JButton btn_editPlanfondNegatif = new JButton();
 		btn_editPlanfondNegatif.setText("Valder le plafond");
 		btn_editPlanfondNegatif.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btn_editPlanfondNegatif.setVisible(false);
+		btn_editPlanfondNegatif.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String plafond = txt_plafondNegatif.getText();
+				plafond = plafond.replace("-", "").replace("€", "").trim();
+				
+				System.out.println(plafond);
+			}
+		});
 		
-		JTextField txt_plafondNegatif = new JTextField();
 		txt_plafondNegatif.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
 			public void changedUpdate(DocumentEvent e) {
@@ -131,5 +146,17 @@ public class ConsulterCompte extends JPanel{
 		gbc.gridx = 1;
 		gbc.gridy = 6;
 		this.add(jScrollPane, gbc);
+	}
+	
+	protected MaskFormatter createFormatter(String s) {
+	    MaskFormatter formatter = null;
+	    try {
+	        formatter = new MaskFormatter(s);
+	        
+	    } catch (java.text.ParseException exc) {
+	        System.err.println("formatter is bad: " + exc.getMessage());
+	        System.exit(-1);
+	    }
+	    return formatter;
 	}
 }

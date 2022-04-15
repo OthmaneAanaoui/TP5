@@ -25,8 +25,8 @@ public class MainView extends JFrame{
 		this.consulterCompte = new ConsulterCompte();
 		this.OuvrirCompte = new OuvrirCompte();
 		
-		container.add(consulterCompte, BorderLayout.SOUTH);
-		// container.add(OuvrirCompte);
+		// container.add(consulterCompte, BorderLayout.SOUTH);
+		container.add(OuvrirCompte);
 		
 		this.setJMenuBar(new MenuBar());
 		this.add(container);
@@ -50,4 +50,22 @@ public class MainView extends JFrame{
 	public void setRetraitPopUp(RetraitPopUp retraitPopUp) {
 		this.retraitPopUp = retraitPopUp;
 	}
+
+	public ConsulterCompte getConsulterCompte() {
+		return consulterCompte;
+	}
+
+	public void setConsulterCompte(ConsulterCompte consulterCompte) {
+		this.consulterCompte = consulterCompte;
+	}
+
+	public OuvrirCompte getOuvrirCompte() {
+		return OuvrirCompte;
+	}
+
+	public void setOuvrirCompte(OuvrirCompte ouvrirCompte) {
+		OuvrirCompte = ouvrirCompte;
+	}
+	
+	
 }

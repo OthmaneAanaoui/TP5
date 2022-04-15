@@ -9,9 +9,11 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.text.MaskFormatter;
 
 import Controller.ControllerButton;
 
@@ -34,8 +36,8 @@ public class OuvrirCompte extends JPanel{
 		JTextField txt_user2 = new JTextField();
 		
 		// ----- add try catch isNumber ---------------------------
-		JTextField txt_depot = new JTextField();
-		JTextField txt_plafondNegatif = new JTextField();
+		JFormattedTextField txt_depot = new JFormattedTextField(createFormatter("########.## €"));
+		JFormattedTextField txt_plafondNegatif = new JFormattedTextField(createFormatter("########.## €"));
 		
 		JButton btn_nouveauCompte = new JButton();
 		btn_nouveauCompte.setText("Ouvrir le compte");
@@ -104,5 +106,17 @@ public class OuvrirCompte extends JPanel{
 		gbc.gridx = 1;
 		gbc.gridy = 6;
 		this.add(btn_nouveauCompte, gbc);
+	}
+	
+	protected MaskFormatter createFormatter(String s) {
+	    MaskFormatter formatter = null;
+	    try {
+	        formatter = new MaskFormatter(s);
+	        
+	    } catch (java.text.ParseException exc) {
+	        System.err.println("formatter is bad: " + exc.getMessage());
+	        System.exit(-1);
+	    }
+	    return formatter;
 	}
 }
