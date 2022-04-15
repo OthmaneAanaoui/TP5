@@ -8,15 +8,16 @@ import javax.swing.JPanel;
 public class MainView extends JFrame{
 	private JPanel container;
 	private ConsulterCompte consulterCompte;
+	private OuvrirCompte OuvrirCompte;
 	
 	public MainView() {
 		this.setTitle("Giuchet Auto");
 		container = new JPanel();
 		container.setLayout(new BorderLayout());
 		
-		this.consulterCompte = new ConsulterCompte();
+		this.OuvrirCompte = new OuvrirCompte();
 		
-		container.add(consulterCompte);
+		container.add(OuvrirCompte);
 		
 		this.setJMenuBar(new MenuBar());
 		this.add(container);
