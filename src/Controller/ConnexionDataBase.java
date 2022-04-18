@@ -62,6 +62,23 @@ public class ConnexionDataBase {
 		return user;
 	}
 	
+	public ArrayList<User> getUsers() {
+		ArrayList<User> users = new ArrayList<User>();
+		User user = null;
+		try {
+			ResultSet res = statement.executeQuery("SELECT * FROM \"public\".\"User\" WHERE \"numberAccount\" IN (0,1)");
+			
+			while(res.next()) {
+				user = new User(res.getInt("id"),res.getString("firstName"), res.getString("lastName"), res.getString("email"), res.getString("password"));
+				users.add(user);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return users;
+	}
+	
 	public User getUserByEmailAndPassword(String email, String password) {
 		User user = null;
 		try {
@@ -98,12 +115,13 @@ public class ConnexionDataBase {
 		return isCreated;
 	}
 	
-	public boolean createAccount(int idUser, String type, float floor) {
+	public boolean createAccount(String idUsers, String type, float floor) {
 		boolean isCreated = false;
-		
+		String req = "INSERT INTO \"public\".\"Account\" (\"id\",\"id_user\",\"type\",\"sold\",\"floor\")\r\n"
+				+ "					VALUES (nextval('\"User_id_seq\"'::regclass),'"+ idUsers +"','"+ type +"',"+ 0 +","+ floor +")";
+		System.out.println(req);
 		try {
-			int res = statement.executeUpdate("INSERT INTO \"public\".\"Account\" (\"id\",\"id_user\",\"type\",\"sold\",\"floor\")\r\n"
-					+ "					VALUES (nextval('\"User_id_seq\"'::regclass),"+ idUser +",'"+ type +"',"+ 0 +","+ floor +")");
+			int res = statement.executeUpdate(req);
 			if(res == 1) {
 				System.out.println("account créé");
 				
@@ -140,7 +158,7 @@ public class ConnexionDataBase {
 	public Account getLastAccount(int id) {
 		Account account = null;
 		try {
-			ResultSet res = statement.executeQuery("SELECT max(id) FROM \"public\".\"Account\" WHERE id_user = '{"+id+"}' LIMIT 1");
+			ResultSet res = statement.executeQuery("SELECT max(id) , id_user FROM \"public\".\"Account\" WHERE id_user = '{"+id+"}' GROUP BY id_user LIMIT 1");
 			
 			while(res.next()) {
 				ArrayList<Integer> array = (ArrayList<Integer>) res.getArray("id_user").getArray();

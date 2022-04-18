@@ -5,8 +5,7 @@ import javax.swing.JPanel;
 import Model.User;
 
 public class ControllerButton {
-	
-	User user = null;
+	static User user;
 	private ConnexionDataBase connexionDataBase;
 	private controller controller;
 	
@@ -41,7 +40,16 @@ public class ControllerButton {
 	}
 	
 	public void addAccount(String type, float floor, float montantTransaction, String user2) {
-		boolean isOk = connexionDataBase.createAccount(user.id, type, floor);
+		String usersId;
+		if(user2 != null) {
+			int iduser = Integer.parseInt(user2.split("_")[1]);
+			usersId = "{"+user.id+","+iduser+"}";
+		}
+		else {
+			usersId = "{"+user.id+"}";
+		}
+		
+		boolean isOk = connexionDataBase.createAccount(usersId, type, floor);
 		if(isOk && montantTransaction > 0) {
 			connexionDataBase.createTransaction("depot", user.id, montantTransaction);
 		}

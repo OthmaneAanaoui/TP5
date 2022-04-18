@@ -7,6 +7,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
+import java.util.Iterator;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -17,15 +18,19 @@ import javax.swing.JTextField;
 import javax.swing.text.MaskFormatter;
 import javax.swing.text.NumberFormatter;
 
+import Controller.ConnexionDataBase;
 import Controller.ControllerButton;
+import Model.User;
 
 public class OuvrirCompte extends JPanel{
 	private ControllerButton controllerButton;
+	private ConnexionDataBase connexionDataBase;
 	private GridBagConstraints gbc;	
 	
 	public OuvrirCompte() {
 		gbc = new GridBagConstraints();
 		this.controllerButton = new ControllerButton();
+		this.connexionDataBase = new ConnexionDataBase();
 		
 		this.setLayout(new GridBagLayout());
 		
@@ -36,8 +41,13 @@ public class OuvrirCompte extends JPanel{
 		JLabel lbl_depot = new JLabel("1er depot :");
 		JLabel lbl_plafondNegatif = new JLabel("Découvert autorisé :");
 		
-		JComboBox txt_user2 = new JComboBox();
-		txt_user2.setVisible(false);
+		JComboBox cb_user2 = new JComboBox();
+		cb_user2.setVisible(false);
+		
+		
+		for (User user : connexionDataBase.getUsers()) {
+			cb_user2.addItem(user.getFirstName()+"_"+user.getId());
+		}
 		
 		JComboBox cb_typeCompte = new JComboBox(Model.Type.values());
 		cb_typeCompte.addActionListener (new ActionListener () {
@@ -45,11 +55,11 @@ public class OuvrirCompte extends JPanel{
 		    	// Compte joint
 		        if(cb_typeCompte.getSelectedIndex() == 1) {
 		        	lbl_user2.setVisible(true);
-		        	txt_user2.setVisible(true);
+		        	cb_user2.setVisible(true);
 		        }
 		        else {
 		        	lbl_user2.setVisible(false);
-		        	txt_user2.setVisible(false);
+		        	cb_user2.setVisible(false);
 		        }
 		    }
 		});
@@ -76,8 +86,14 @@ public class OuvrirCompte extends JPanel{
 					// TODO: handle exception
 					floor = 0;
 				}
-				
-				controllerButton.addAccount(cb_typeCompte.getSelectedItem().toString(), 0, floor, txt_user2.getSelectedItem().toString());
+				String user2;
+				if(cb_typeCompte.getSelectedIndex() == 1) {
+		        	user2 = cb_user2.getSelectedItem().toString();
+		        }
+		        else {
+		        	user2 = null;
+		        }
+				controllerButton.addAccount(cb_typeCompte.getSelectedItem().toString(), 0, floor, user2);
 			}
 		});
 		
@@ -100,7 +116,7 @@ public class OuvrirCompte extends JPanel{
 		
 		gbc.gridx = 1;
 		gbc.gridy = 1;
-		this.add(txt_user2, gbc);
+		this.add(cb_user2, gbc);
 		
 		gbc.gridwidth = 2;
 		gbc.gridx = 0;
