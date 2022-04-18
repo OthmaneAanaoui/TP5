@@ -14,14 +14,15 @@ import Model.Type;
 import Model.User;
 
 public class ConnexionDataBase {
-	Connection connexion;
-	Statement statement;
+	private Connection connexion;
+	private Statement statement;
+	static User userConnected;
+	
 	public ConnexionDataBase() {
 		super();
 		try {
 			Class.forName("org.postgresql.Driver");
 			connexion = DriverManager.getConnection("jdbc:postgresql://postgresql-ynov.alwaysdata.net:5432/ynov_database","ynov","ynov!3543");
-			System.out.println(connexion);
 			statement = connexion.createStatement();
 			
 		} catch (ClassNotFoundException | SQLException e) {
@@ -80,14 +81,15 @@ public class ConnexionDataBase {
 	}
 	
 	public User getUserByEmailAndPassword(String email, String password) {
-		User user = null;
+		//User user = null;
 		try {
 			ResultSet res = statement.executeQuery("SELECT * FROM \"public\".\"User\" WHERE email = '"+ email + "' AND password = '" + password+"';");
 			
 			while(res.next()) {
 				//System.out.println("");
 				//System.out.println(res.getString("Nom"));
-				user = new User(res.getInt("id"),res.getString("firstName"), res.getString("lastName"), res.getString("email"), res.getString("password"));
+				userConnected = new User(res.getInt("id"),res.getString("firstName"), res.getString("lastName"), res.getString("email"), res.getString("password"));
+				userConnected.setNumberAccount(res.getInt("numberAccount"));
 				//System.out.println(user);
 			}
 			res.close();
@@ -95,7 +97,9 @@ public class ConnexionDataBase {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return user;
+		//userConnected = user;
+		System.out.println(userConnected.getId());
+		return userConnected;
 	}
 	
 	public boolean createUser(String email, String password, String firstName, String lastName) {
@@ -104,7 +108,7 @@ public class ConnexionDataBase {
 			int res = statement.executeUpdate("INSERT INTO \"public\".\"User\" (\"id\",\"firstName\",\"lastName\",\"email\",\"password\",\"numberAccount\")\r\n"
 					+ "					VALUES (nextval('\"User_id_seq\"'::regclass),'"+ firstName +"','"+ lastName +"','"+ email +"','"+ password +"',"+ 0 +")");
 			if(res == 1) {
-				System.out.println("user créé");
+				System.out.println("User created");
 				isCreated = true;
 			}
 			
@@ -123,7 +127,7 @@ public class ConnexionDataBase {
 		try {
 			int res = statement.executeUpdate(req);
 			if(res == 1) {
-				System.out.println("account créé");
+				System.out.println("Account created");
 				
 				isCreated = true;
 			}
@@ -143,7 +147,7 @@ public class ConnexionDataBase {
 			int res = statement.executeUpdate("INSERT INTO \"public\".\"Transaction\" (\"id\",\"name\",\"id_account\",\"montant\",\"date\")\r\n"
 					+ "					VALUES (nextval('\"User_id_seq\"'::regclass),"+ name +",'"+ account.id +"',"+ montant +",'"+date+"')");
 			if(res == 1) {
-				System.out.println("Transaction créé");
+				System.out.println("Transaction created");
 				////account = new Account(, res, null, null, res)
 				isCreated = true;
 			}
@@ -178,4 +182,63 @@ public class ConnexionDataBase {
 		}
 		return account;
 	}
+	
+	public boolean updateNumberAccount(int id,int numberAccount) {
+		boolean isUpdated = false;
+		try {
+			int res = statement.executeUpdate("UPDATE \"public\".\"User\" SET \"numberAccount\" = "+numberAccount+" WHERE id = "+id);
+			if(res == 1) {
+				System.out.println("user updated");
+				isUpdated = true;
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return isUpdated;
+	}
+	
+	public String getSoldTotal() {
+		int somme = 0;
+		String reslut = "0";
+		try {
+			System.out.println(userConnected.getId());
+			ResultSet res = statement.executeQuery("SELECT sold FROM \"public\".\"Account\" WHERE "+userConnected.getId()+" = ANY (id_user)");
+			while(res.next()) { //SELECT "id_user" FROM "public"."Account" WHERE "id_user" LIKE '{%1%}'::integer[]
+				somme += res.getInt("sold");
+				
+			}
+			reslut = somme+"";
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			somme = 0;
+			reslut = somme+"";
+		}
+		
+		return reslut;
+	}
+	
+	public String getAccountFromUser(int id) {
+		int somme = 0;
+		String reslut = "0";
+		try {
+			System.out.println(userConnected.getId());
+			ResultSet res = statement.executeQuery("SELECT * FROM \"public\".\"Account\" WHERE id_user LIKE '{"+userConnected.getId()+"%}' GROUP BY id_user");
+			while(res.next()) {
+				somme = res.getInt("somme");
+				reslut = somme+"";
+			}
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			somme = 0;
+			reslut = somme+"";
+		}
+		
+		return reslut;
+	}
+	
+	
 }

@@ -39,20 +39,32 @@ public class ControllerButton {
 		}
 	}
 	
-	public void addAccount(String type, float floor, float montantTransaction, String user2) {
+	public boolean addAccount(String type, float floor, float montantTransaction, String user2) {
 		String usersId;
-		if(user2 != null) {
-			int iduser = Integer.parseInt(user2.split("_")[1]);
-			usersId = "{"+user.id+","+iduser+"}";
+		boolean isAdding = false;
+		System.out.println(user.getNumberAccount());
+		if(user.getNumberAccount() < 2) {
+			
+			user.setNumberAccount(user.getNumberAccount()+1);
+			if(user2 != null) {
+				int iduser = Integer.parseInt(user2.split("_")[1]);
+				usersId = "{"+user.id+","+iduser+"}";
+			}
+			else {
+				usersId = "{"+user.id+"}";
+			}
+			
+			boolean isOk = connexionDataBase.createAccount(usersId, type, floor);
+			if(isOk) {
+				isAdding = true;
+				if(montantTransaction > 0) {
+					connexionDataBase.createTransaction("depot", user.id, montantTransaction);
+				}
+				connexionDataBase.updateNumberAccount(user.getId(), user.getNumberAccount());
+			}
 		}
-		else {
-			usersId = "{"+user.id+"}";
-		}
-		
-		boolean isOk = connexionDataBase.createAccount(usersId, type, floor);
-		if(isOk && montantTransaction > 0) {
-			connexionDataBase.createTransaction("depot", user.id, montantTransaction);
-		}
+
+		return isAdding;
 	}
 	
 	public void switchToLogIn() {
@@ -92,6 +104,7 @@ public class ControllerButton {
 			break;
 		case "consulterCompte":
 			controller.mainView.getOuvrirCompte().setVisible(false);
+			controller.mainView.getConsulterCompte().updateValues();
 			controller.mainView.getConsulterCompte().setVisible(true);
 			break;
 		case "aPropos":
@@ -104,5 +117,7 @@ public class ControllerButton {
 		}
 		
 	}
+	
+	
 	
 }

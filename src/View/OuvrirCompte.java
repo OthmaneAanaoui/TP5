@@ -79,12 +79,14 @@ public class OuvrirCompte extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				float floor;
+				float floor,depot;
 				try {
-					floor = Float.parseFloat(txt_plafondNegatif.getText()) ;
+					floor = Float.parseFloat(txt_plafondNegatif.getText());
+					depot = Float.parseFloat(txt_depot.getText());
 				} catch (Exception e2) {
 					// TODO: handle exception
 					floor = 0;
+					depot = 0;
 				}
 				String user2;
 				if(cb_typeCompte.getSelectedIndex() == 1) {
@@ -93,7 +95,10 @@ public class OuvrirCompte extends JPanel{
 		        else {
 		        	user2 = null;
 		        }
-				controllerButton.addAccount(cb_typeCompte.getSelectedItem().toString(), 0, floor, user2);
+				boolean isOk = controllerButton.addAccount(cb_typeCompte.getSelectedItem().toString(), floor, depot, user2);
+				if(!isOk) {
+					btn_nouveauCompte.setEnabled(false);
+				}
 			}
 		});
 		

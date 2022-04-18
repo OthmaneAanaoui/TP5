@@ -32,6 +32,14 @@ public class User {
 		this.password = passeword;
 		//Sold = sold;
 	}
+	
+	public int getNumberAccount() {
+		return numberAccount;
+	}
+
+	public void setNumberAccount(int numberAccount) {
+		this.numberAccount = numberAccount;
+	}
 
 	/**
 	 * @return the id

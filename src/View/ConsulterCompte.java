@@ -23,14 +23,17 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
 import javax.swing.text.NumberFormatter;
 
+import Controller.ConnexionDataBase;
 import Controller.ControllerButton;
 
 public class ConsulterCompte extends JPanel{
 	private GridBagConstraints gbc;	
 	private ControllerButton controllerButton;
+	private ConnexionDataBase connexionDataBase;
 	
-	
+	private JTextField txt_montantTotal;
 	public ConsulterCompte() {
+		this.connexionDataBase = new ConnexionDataBase();
 		this.controllerButton = new ControllerButton();
 		
 		this.gbc = new GridBagConstraints();
@@ -43,8 +46,9 @@ public class ConsulterCompte extends JPanel{
 		JLabel lbl_plafondNegatif = new JLabel("Découvert autorisé : ");
 		JLabel lbl_listOpe = new JLabel("Liste des opérations : ");
 		
-		JTextField txt_montantTotal = new JTextField();
+		txt_montantTotal = new JTextField();
 		txt_montantTotal.setEditable(false);
+		
 		JTextField txt_montantCompte1 = new JTextField();
 		txt_montantCompte1.setEditable(false);
 		JTextField txt_montantCompte2 = new JTextField();
@@ -148,6 +152,11 @@ public class ConsulterCompte extends JPanel{
 		gbc.gridx = 1;
 		gbc.gridy = 6;
 		this.add(jScrollPane, gbc);
+	}
+	
+	public void updateValues() {
+		txt_montantTotal.setText(connexionDataBase.getSoldTotal());
+		
 	}
 	
 	protected NumberFormatter createFormatter(int minValue, int maxValue) {

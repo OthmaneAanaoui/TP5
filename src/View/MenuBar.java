@@ -61,7 +61,6 @@ public class MenuBar extends JMenuBar{
 			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub
 				controllerButton.switchPanel("ouvrirCompte");
-				System.out.println("hey");
 			}
 		});
 		
@@ -104,6 +103,7 @@ public class MenuBar extends JMenuBar{
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				controllerButton.switchPanel("consulterCompte");
+				
 			}
 		});
 		
