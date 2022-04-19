@@ -121,6 +121,16 @@ public class MenuBar extends JMenuBar{
 		option.add(deconexion);
 		option.add(quitter);
 		
+		aPorpos.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				controllerButton.switchPanel("aPropos");
+				
+			}
+		});
+		
 		deconexion.addActionListener(new ActionListener() {
 			
 			@Override

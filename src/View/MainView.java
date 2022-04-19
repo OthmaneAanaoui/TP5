@@ -1,8 +1,6 @@
 package View;
 
 import java.awt.BorderLayout;
-import java.awt.GridBagLayout;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -12,21 +10,24 @@ public class MainView extends JFrame{
 	private OuvrirCompte OuvrirCompte;
 	private DepotPopUp depotPopUp;
 	private RetraitPopUp retraitPopUp;
+	private APropos aPropos;
 	
 	public MainView() {
-		depotPopUp = new DepotPopUp(container);
-		retraitPopUp = new RetraitPopUp(container);
+		this.depotPopUp = new DepotPopUp(container);
+		this.retraitPopUp = new RetraitPopUp(container);
 		
 		this.setTitle("Giuchet Auto");
 		
-		container = new JPanel();
-		container.setLayout(new BorderLayout());
+		this.container = new JPanel();
+		this.container.setLayout(new BorderLayout());
 		
 		this.consulterCompte = new ConsulterCompte();
 		this.OuvrirCompte = new OuvrirCompte();
+		this.aPropos = new APropos();
 		
-		container.add(consulterCompte, BorderLayout.SOUTH);
-		container.add(OuvrirCompte);
+		this.container.add(aPropos);
+		this.container.add(consulterCompte);
+		this.container.add(OuvrirCompte);
 		
 		this.setJMenuBar(new MenuBar());
 		this.add(container);
@@ -67,5 +68,11 @@ public class MainView extends JFrame{
 		OuvrirCompte = ouvrirCompte;
 	}
 	
-	
+	public APropos getaPropos() {
+		return aPropos;
+	}
+
+	public void setaPropos(APropos aPropos) {
+		this.aPropos = aPropos;
+	}
 }
