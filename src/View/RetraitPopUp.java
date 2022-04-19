@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -17,8 +18,7 @@ public class RetraitPopUp  {
 	Object[] popUpTab;
 	JPanel container;
 	
-	public RetraitPopUp(JPanel container) {
-		this.container = container;
+	public RetraitPopUp() {
 		
 		JLabel lblChoixCompte = new JLabel("Choix du compte :");
 		JLabel lblMontantDepot = new JLabel("Montant du retrait :");

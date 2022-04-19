@@ -73,7 +73,9 @@ public class OuvrirCompte extends JPanel{
 		JButton btn_nouveauCompte = new JButton();
 		btn_nouveauCompte.setText("Ouvrir le compte");
 		btn_nouveauCompte.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		
+		if(controllerButton.user != null && controllerButton.user.getNumberAccount() == 2) {
+			btn_nouveauCompte.setVisible(false);
+		}
 		btn_nouveauCompte.addActionListener(new ActionListener() {
 			
 			@Override
@@ -97,7 +99,7 @@ public class OuvrirCompte extends JPanel{
 		        }
 				boolean isOk = controllerButton.addAccount(cb_typeCompte.getSelectedItem().toString(), floor, depot, user2);
 				if(!isOk) {
-					btn_nouveauCompte.setEnabled(false);
+					btn_nouveauCompte.setVisible(false);
 				}
 			}
 		});

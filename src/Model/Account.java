@@ -20,6 +20,14 @@ public class Account {
 		this.sold = 0;
 		this.floor = floor;
 	}
+	public Account(int id, User[] user, Type type, float floor, float sold) {
+		super();
+		this.id = id;
+		this.user = user;
+		this.type = type;
+		this.sold = sold;
+		this.floor = floor;
+	}
 	/**
 	 * 
 	 */

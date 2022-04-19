@@ -5,7 +5,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class MainView extends JFrame{
-	private JPanel container;
 	private ConsulterCompte consulterCompte;
 	private OuvrirCompte OuvrirCompte;
 	private DepotPopUp depotPopUp;
@@ -13,24 +12,23 @@ public class MainView extends JFrame{
 	private APropos aPropos;
 	
 	public MainView() {
-		this.depotPopUp = new DepotPopUp(container);
-		this.retraitPopUp = new RetraitPopUp(container);
+		this.depotPopUp = new DepotPopUp();
+		this.retraitPopUp = new RetraitPopUp();
 		
 		this.setTitle("Giuchet Auto");
-		
-		this.container = new JPanel();
-		this.container.setLayout(new BorderLayout());
 		
 		this.consulterCompte = new ConsulterCompte();
 		this.OuvrirCompte = new OuvrirCompte();
 		this.aPropos = new APropos();
 		
-		this.container.add(aPropos);
-		this.container.add(consulterCompte);
-		this.container.add(OuvrirCompte);
+		this.add(aPropos);
+		this.add(consulterCompte);
+		this.add(OuvrirCompte);
 		
 		this.setJMenuBar(new MenuBar());
-		this.add(container);
+		
+		this.setContentPane(aPropos);
+        this.revalidate();
 		
 		this.setSize(600, 600);
 		this.setLocationRelativeTo(null);

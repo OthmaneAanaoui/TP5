@@ -1,12 +1,16 @@
 package Controller;
 
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.Iterator;
 
 import Model.Account;
@@ -38,7 +42,7 @@ public class ConnexionDataBase {
 			while(res.next()) {
 				System.out.println(res.getString(1)+" "+res.getDate(2)+" "+res.getString(3));
 			}
-			
+			res.close();
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -49,12 +53,11 @@ public class ConnexionDataBase {
 	public User getUserById(int id) {
 		User user = null;
 		try {
-			ResultSet res = statement.executeQuery("SELECT * FROM \"public\".\"User\" WHERE id ="+id);
+			ResultSet res2 = statement.executeQuery("SELECT * FROM \"public\".\"User\" WHERE id ="+id);
 			
-			while(res.next()) {
-				user = new User(res.getInt("id"),res.getString("firstName"), res.getString("lastName"), res.getString("email"), res.getString("password"));
+			while(res2.next()) {
+				user = new User(res2.getInt("id"),res2.getString("firstName"), res2.getString("lastName"), res2.getString("email"), res2.getString("password"));
 			}
-			
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -73,6 +76,25 @@ public class ConnexionDataBase {
 				user = new User(res.getInt("id"),res.getString("firstName"), res.getString("lastName"), res.getString("email"), res.getString("password"));
 				users.add(user);
 			}
+			res.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return users;
+	}
+	
+	public Dictionary<Integer,User> getAllUsers() {
+		Dictionary<Integer,User> users = new Hashtable<Integer,User>();
+		User user = null;
+		try {
+			ResultSet res = statement.executeQuery("SELECT * FROM \"public\".\"User\" ");
+			
+			while(res.next()) {
+				user = new User(res.getInt("id"),res.getString("firstName"), res.getString("lastName"), res.getString("email"), res.getString("password"));
+				users.put(user.getId(), user);
+			}
+			res.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -175,7 +197,7 @@ public class ConnexionDataBase {
 				account = new Account(res.getInt("id"), users , type , res.getFloat("floor"));
 			}
 			
-			
+			res.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -210,6 +232,7 @@ public class ConnexionDataBase {
 				
 			}
 			reslut = somme+"";
+			res.close();
 		} catch (SQLException e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -220,24 +243,37 @@ public class ConnexionDataBase {
 		return reslut;
 	}
 	
-	public String getAccountFromUser(int id) {
-		int somme = 0;
-		String reslut = "0";
+	public ArrayList<Account> getAccountFromUser() {
+		ArrayList<Account> accounts = new ArrayList<>();
+		Dictionary<Integer,User> allUsers = getAllUsers();
+		
 		try {
-			System.out.println(userConnected.getId());
-			ResultSet res = statement.executeQuery("SELECT * FROM \"public\".\"Account\" WHERE id_user LIKE '{"+userConnected.getId()+"%}' GROUP BY id_user");
+			ResultSet res = statement.executeQuery("SELECT * FROM \"public\".\"Account\" WHERE "+userConnected.getId()+" = ANY (id_user);");
+			//System.out.println(res);
 			while(res.next()) {
-				somme = res.getInt("somme");
-				reslut = somme+"";
+				String users_id = res.getString("id_user");
+				Type type = Type.valueOf(res.getString("type"));
+				int id = res.getInt("id");
+				float floor = res.getFloat("floor");
+				float sold = res.getFloat("sold");
+				users_id = users_id.replace("{", "");
+				users_id = users_id.replace("}", "");
+				String[] array = users_id.split(",");
+				
+				User[] users = new User[array.length]; //
+				for (int i = 0; i < array.length; i++) {
+					User user = allUsers.get(Integer.parseInt(array[i]));
+					users[i] = user;
+				}
+				//System.out.println(Arrays.toString(users));
+				accounts.add(new Account(id, users , type , floor,sold));
 			}
+			res.close();
 		} catch (SQLException e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			somme = 0;
-			reslut = somme+"";
 		}
-		
-		return reslut;
+		return accounts;
 	}
 	
 	

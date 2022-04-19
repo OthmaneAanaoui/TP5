@@ -5,7 +5,7 @@ import javax.swing.JPanel;
 import Model.User;
 
 public class ControllerButton {
-	static User user;
+	public static User user;
 	private ConnexionDataBase connexionDataBase;
 	private controller controller;
 	
@@ -96,27 +96,26 @@ public class ControllerButton {
 		controller.mainView.getRetraitPopUp().showPopUp();
 	}
 	
-	public void switchPanel(String panel) {
-		switch (panel) {
-		case "ouvrirCompte":
-			controller.mainView.getConsulterCompte().setVisible(false);
-			controller.mainView.getOuvrirCompte().setVisible(true);
-			break;
-		case "consulterCompte":
-			controller.mainView.getOuvrirCompte().setVisible(false);
-			controller.mainView.getConsulterCompte().updateValues();
-			controller.mainView.getConsulterCompte().setVisible(true);
-			break;
-		case "aPropos":
-			controller.mainView.getOuvrirCompte().setVisible(false);
-			controller.mainView.getConsulterCompte().setVisible(false);
-			
-			break;
-		default:
-			break;
-		}
-		
-	}
+	  public void switchPanel(String panel) {
+	        switch (panel) {
+	        case "ouvrirCompte":
+	            controller.mainView.setContentPane(controller.mainView.getOuvrirCompte());
+	            controller.mainView.revalidate();
+	            break;
+	        case "consulterCompte":
+	            controller.mainView.getConsulterCompte().updateValues();
+	            controller.mainView.setContentPane(controller.mainView.getConsulterCompte());
+	            controller.mainView.revalidate();
+	            break;
+	        case "aPropos":
+	            controller.mainView.setContentPane(controller.mainView.getaPropos());
+	            controller.mainView.revalidate();
+	            break;
+	        default:
+	            break;
+	        }
+	        
+	    }
 	
 	
 	

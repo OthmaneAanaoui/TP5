@@ -1,6 +1,7 @@
 package View;
 
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -13,8 +14,7 @@ public class DepotPopUp {
 	Object[] popUpTab;
 	JPanel container;
 	
-	public DepotPopUp(JPanel container) {
-		this.container = container;
+	public DepotPopUp() {
 		
 		JLabel lblChoixCompte = new JLabel("Choix du compte :");
 		JLabel lblMontantDepot = new JLabel("Montant du dépot :");

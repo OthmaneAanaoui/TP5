@@ -8,6 +8,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -25,6 +26,7 @@ import javax.swing.text.NumberFormatter;
 
 import Controller.ConnexionDataBase;
 import Controller.ControllerButton;
+import Model.Account;
 
 public class ConsulterCompte extends JPanel{
 	private GridBagConstraints gbc;	
@@ -32,6 +34,8 @@ public class ConsulterCompte extends JPanel{
 	private ConnexionDataBase connexionDataBase;
 	
 	private JTextField txt_montantTotal;
+	private JTextField txt_montantCompte1;
+	private JTextField txt_montantCompte2;
 	public ConsulterCompte() {
 		this.connexionDataBase = new ConnexionDataBase();
 		this.controllerButton = new ControllerButton();
@@ -49,9 +53,10 @@ public class ConsulterCompte extends JPanel{
 		txt_montantTotal = new JTextField();
 		txt_montantTotal.setEditable(false);
 		
-		JTextField txt_montantCompte1 = new JTextField();
+		txt_montantCompte1 = new JTextField();
 		txt_montantCompte1.setEditable(false);
-		JTextField txt_montantCompte2 = new JTextField();
+		
+		txt_montantCompte2 = new JTextField();
 		txt_montantCompte2.setEditable(false);
 		
 		JTable jTable = new JTable();
@@ -156,6 +161,14 @@ public class ConsulterCompte extends JPanel{
 	
 	public void updateValues() {
 		txt_montantTotal.setText(connexionDataBase.getSoldTotal());
+		ArrayList<Account> accounts = connexionDataBase.getAccountFromUser();
+		System.out.println(accounts.get(0).sold);
+		String sold1 = accounts.get(0).sold+"";
+		txt_montantCompte1.setText(sold1);
+		if(accounts.size() > 1) {
+			String sold2 = accounts.get(1).sold+"";
+			txt_montantCompte2.setText(sold2);
+		}
 		
 	}
 	
