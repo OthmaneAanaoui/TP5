@@ -35,6 +35,13 @@ public class Account {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
+	public float getFloor() {
+		return floor;
+	}
+	public void setFloor(float floor) {
+		this.floor = floor;
+	}
 	/**
 	 * @return the id
 	 */

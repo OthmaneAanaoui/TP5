@@ -58,7 +58,7 @@ public class ControllerButton {
 			if(isOk) {
 				isAdding = true;
 				if(montantTransaction > 0) {
-					connexionDataBase.createTransaction("depot", user.id, montantTransaction);
+					connexionDataBase.createTransaction("depot", user.id, montantTransaction,-1);
 				}
 				connexionDataBase.updateNumberAccount(user.getId(), user.getNumberAccount());
 			}

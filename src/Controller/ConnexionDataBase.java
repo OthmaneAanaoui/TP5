@@ -10,10 +10,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 
 import Model.Account;
+import Model.Transaction;
 import Model.Type;
 import Model.User;
 
@@ -21,7 +23,7 @@ public class ConnexionDataBase {
 	private Connection connexion;
 	private Statement statement;
 	static User userConnected;
-	
+	static Dictionary<Integer,Account> userAccounts;
 	public ConnexionDataBase() {
 		super();
 		try {
@@ -102,25 +104,48 @@ public class ConnexionDataBase {
 		return users;
 	}
 	
-	public User getUserByEmailAndPassword(String email, String password) {
-		//User user = null;
+	public Dictionary<Integer,Account> getAllAccount() {
+		Dictionary<Integer,Account> accounts = new Hashtable<Integer,Account>();
+		Dictionary<Integer,User> allUsers = getAllUsers();
+		Account account = null;
 		try {
-			ResultSet res = statement.executeQuery("SELECT * FROM \"public\".\"User\" WHERE email = '"+ email + "' AND password = '" + password+"';");
+			ResultSet res = statement.executeQuery("SELECT * FROM \"public\".\"Account\" ");
 			
 			while(res.next()) {
-				//System.out.println("");
-				//System.out.println(res.getString("Nom"));
-				userConnected = new User(res.getInt("id"),res.getString("firstName"), res.getString("lastName"), res.getString("email"), res.getString("password"));
-				userConnected.setNumberAccount(res.getInt("numberAccount"));
-				//System.out.println(user);
+				String users_id = res.getString("id_user");
+				users_id = users_id.replace("{", "");
+				users_id = users_id.replace("}", "");
+				String[] array = users_id.split(",");
+				User[] users = new User[array.length]; //
+				for (int i = 0; i < array.length; i++) {
+					User user = allUsers.get(Integer.parseInt(array[i]));
+					users[i] = user;
+				}
+				account = new Account(res.getInt("id"), users, Type.valueOf(res.getString("type")) , res.getFloat("sold"), res.getFloat("floor"));
+				accounts.put(account.getId(), account);
 			}
 			res.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//userConnected = user;
-		System.out.println(userConnected.getId());
+		return accounts;
+	}
+	
+	public User getUserByEmailAndPassword(String email, String password) {
+		try {
+			ResultSet res = statement.executeQuery("SELECT * FROM \"public\".\"User\" WHERE email = '"+ email + "' AND password = '" + password+"';");
+			
+			while(res.next()) {
+				userConnected = new User(res.getInt("id"),res.getString("firstName"), res.getString("lastName"), res.getString("email"), res.getString("password"));
+				userConnected.setNumberAccount(res.getInt("numberAccount"));
+			}
+			res.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		getAccountFromUser();
 		return userConnected;
 	}
 	
@@ -161,13 +186,21 @@ public class ConnexionDataBase {
 		return isCreated;
 	}
 	
-	public boolean createTransaction(String name,int idUser, float montant) {
+	public boolean createTransaction(String name,int idUser, float montant,int idAccount) {
 		boolean isCreated = false;
 		Date date = new Date();
-		Account account = getLastAccount(idUser);
+		int id;
+		if(idAccount == -1) {
+			Account account = getLastAccount(idUser);
+			id = account.getId();
+		}
+		else {
+			id = idAccount;
+		}
+		
 		try {
 			int res = statement.executeUpdate("INSERT INTO \"public\".\"Transaction\" (\"id\",\"name\",\"id_account\",\"montant\",\"date\")\r\n"
-					+ "					VALUES (nextval('\"User_id_seq\"'::regclass),"+ name +",'"+ account.id +"',"+ montant +",'"+date+"')");
+					+ "					VALUES (nextval('\"User_id_seq\"'::regclass),"+ name +",'"+ id +"',"+ montant +",'"+date+"')");
 			if(res == 1) {
 				System.out.println("Transaction created");
 				////account = new Account(, res, null, null, res)
@@ -183,15 +216,20 @@ public class ConnexionDataBase {
 	
 	public Account getLastAccount(int id) {
 		Account account = null;
+		Dictionary<Integer,User> allUsers = getAllUsers();
 		try {
 			ResultSet res = statement.executeQuery("SELECT max(id) , id_user FROM \"public\".\"Account\" WHERE id_user = '{"+id+"}' GROUP BY id_user LIMIT 1");
 			
 			while(res.next()) {
-				ArrayList<Integer> array = (ArrayList<Integer>) res.getArray("id_user").getArray();
-				User[] users = null;
-				for (Integer integer : array) {
-					User user = getUserById(integer);
-					users[integer] = user;
+				String users_id = res.getString("id_user");
+				users_id = users_id.replace("{", "");
+				users_id = users_id.replace("}", "");
+				String[] array = users_id.split(",");
+				
+				User[] users = new User[array.length]; //
+				for (int i = 0; i < array.length; i++) {
+					User user = allUsers.get(Integer.parseInt(array[i]));
+					users[i] = user;
 				}
 				Type type = Type.valueOf(res.getString("type"));
 				account = new Account(res.getInt("id"), users , type , res.getFloat("floor"));
@@ -245,6 +283,7 @@ public class ConnexionDataBase {
 	
 	public ArrayList<Account> getAccountFromUser() {
 		ArrayList<Account> accounts = new ArrayList<>();
+		Dictionary<Integer,Account> useraccounts = new Hashtable<Integer,Account>();
 		Dictionary<Integer,User> allUsers = getAllUsers();
 		
 		try {
@@ -267,8 +306,10 @@ public class ConnexionDataBase {
 				}
 				//System.out.println(Arrays.toString(users));
 				accounts.add(new Account(id, users , type , floor,sold));
+				useraccounts.put(id, new Account(id, users , type , floor,sold));
 			}
 			res.close();
+			userAccounts = useraccounts;
 		} catch (SQLException e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -276,5 +317,72 @@ public class ConnexionDataBase {
 		return accounts;
 	}
 	
+	public Dictionary<Integer,Transaction> getTransactionWithLimit(int id1, int id2, int limit){
+		
+		Dictionary<Integer,Transaction> transactions = new Hashtable<Integer,Transaction>();
+		Dictionary<Integer,Account> allAccounts = getAllAccount();
+		
+		try {
+			ResultSet res;
+			if(id2 != -1) {
+				res = statement.executeQuery("SELECT * FROM \"public\".\"Transaction\" WHERE id_account IN ("+id1+","+id2+") LIMITE "+limit+";");
+			}
+			else {
+				res = statement.executeQuery("SELECT * FROM \"public\".\"Transaction\" WHERE id_account IN ("+id1+") LIMITE "+limit+";");
+			}
+			
+			//System.out.println(res);
+			while(res.next()) {
+				int idTransaction = res.getInt("id");
+				String name = res.getString("name");
+				int idAccount = res.getInt("id_account");
+				Account account = allAccounts.get(idAccount);
+				float montant = res.getFloat("montant");
+				Date date = res.getDate("date");
+				transactions.put(idTransaction,new Transaction(idTransaction, name, account, montant, date));
+			}
+			res.close();
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return transactions;
+	}
 	
+	public void addMoney(int idAccount, float montant) {
+		float sold = userAccounts.get(idAccount).getSold() + montant;
+		boolean isUpdated = false;
+		try {
+			int res = statement.executeUpdate("UPDATE \"public\".\"Account\" SET \"sold\" = "+sold+" WHERE id = "+idAccount);
+			if(res == 1) {
+				System.out.println("account updated");
+				isUpdated = true;
+				createTransaction("Dépot", userConnected.getId(), montant, idAccount);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		getAccountFromUser();
+	}
+	
+	public boolean withdrawMoney(int idAccount, float montant) {
+		float sold = userAccounts.get(idAccount).getSold() - montant;
+		boolean isUpdated = false;
+		if(sold >= userAccounts.get(idAccount).getFloor()) {
+			try {
+				int res = statement.executeUpdate("UPDATE \"public\".\"Account\" SET \"sold\" = "+sold+" WHERE id = "+idAccount);
+				if(res == 1) {
+					System.out.println("account updated");
+					isUpdated = true;
+					createTransaction("Retrait", userConnected.getId(), montant, idAccount);
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			getAccountFromUser();
+		}
+		return isUpdated;
+	}
 }
