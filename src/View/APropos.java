@@ -22,7 +22,7 @@ public class APropos extends JPanel{
 	public APropos() {
 		this.connexionDataBase = new ConnexionDataBase();
 		this.controllerButton = new ControllerButton();
-		
+	
 		this.gbc = new GridBagConstraints();
 		
 		this.setLayout(new GridBagLayout());
