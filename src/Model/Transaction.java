@@ -5,17 +5,17 @@ import java.util.Date;
 
 public class Transaction {
 	int  id;
-	String name = "";
-	User user;
+	String name;
+	Account account;
 	float montant;
 	Date date;
 	
 	
-	public Transaction(int id, String name, User user, float montant, Date date) {
+	public Transaction(int id, String name, Account account, float montant, Date date) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.user = user;
+		this.account = account;
 		this.montant = montant;
 		this.date = date;
 	}
@@ -32,11 +32,11 @@ public class Transaction {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public User getUser() {
-		return user;
+	public Account getAccount() {
+		return account;
 	}
-	public void setUser(User user) {
-		this.user = user;
+	public void setAccount(Account account) {
+		this.account = account;
 	}
 	public float getMontant() {
 		return montant;
@@ -60,7 +60,7 @@ public class Transaction {
 		float NewSold = account.getSold() + amount;
 		account.setSold(NewSold);
 		
-		return  new Transaction(1,Descript,user,amount,date);
+		return  new Transaction(1,Descript,account,amount,date);
 	}
 	
 	public boolean Retrait(User user,Account account,Float amount,String Descript)
@@ -75,7 +75,7 @@ public class Transaction {
 			float NewSold = account.getSold() - amount;
 			//new Transaction(1,Descript,user,NewSold,date);
 			account.setSold(NewSold);
-			new Transaction(1,Descript,user,amount,date);
+			new Transaction(1,Descript,account,amount,date);
 			  
 			return true;
 		}

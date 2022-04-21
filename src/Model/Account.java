@@ -20,21 +20,27 @@ public class Account {
 		this.sold = 0;
 		this.floor = floor;
 	}
-	
-	public float getFloor() {
-		return floor;
-	}
-
-	public void setFloor(float floor) {
+	public Account(int id, User[] user, Type type, float floor, float sold) {
+		super();
+		this.id = id;
+		this.user = user;
+		this.type = type;
+		this.sold = sold;
 		this.floor = floor;
 	}
-
 	/**
 	 * 
 	 */
 	public Account() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+	
+	public float getFloor() {
+		return floor;
+	}
+	public void setFloor(float floor) {
+		this.floor = floor;
 	}
 	/**
 	 * @return the id
@@ -84,5 +90,7 @@ public class Account {
 	public void setSold(float sold) {
 		this.sold = sold;
 	}
+	
+	
 	
 }
