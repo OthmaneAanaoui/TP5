@@ -44,7 +44,6 @@ public class RetraitPopUp  {
 		int choix = JOptionPane.showConfirmDialog(container, popUpTab, "Retrait", JOptionPane.OK_CANCEL_OPTION, JOptionPane.CLOSED_OPTION);
 		
 		if (choix == JOptionPane.OK_OPTION) {
-			System.out.println("it's okay");
 			if(!txtMontantDepot.getText().isEmpty()) {
 				
 				try {

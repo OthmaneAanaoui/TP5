@@ -27,6 +27,8 @@ public class OuvrirCompte extends JPanel{
 	private ConnexionDataBase connexionDataBase;
 	private GridBagConstraints gbc;	
 	
+	private JComboBox cb_user2;
+	
 	public OuvrirCompte() {
 		gbc = new GridBagConstraints();
 		this.controllerButton = new ControllerButton();
@@ -41,14 +43,9 @@ public class OuvrirCompte extends JPanel{
 		JLabel lbl_depot = new JLabel("1er depot :");
 		JLabel lbl_plafondNegatif = new JLabel("Découvert autorisé :");
 		
-		JComboBox cb_user2 = new JComboBox();
+		cb_user2 = new JComboBox();
 		cb_user2.setVisible(false);
-		
-		
-		for (User user : connexionDataBase.getUsers()) {
-			cb_user2.addItem(user.getFirstName()+"_"+user.getId());
-		}
-		
+				
 		JComboBox cb_typeCompte = new JComboBox(Model.Type.values());
 		cb_typeCompte.addActionListener (new ActionListener () {
 		    public void actionPerformed(ActionEvent e) {
@@ -81,14 +78,12 @@ public class OuvrirCompte extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				float floor,depot;
+				float floor = 0,depot = 0;
 				try {
 					floor = Float.parseFloat(txt_plafondNegatif.getText());
 					depot = Float.parseFloat(txt_depot.getText());
 				} catch (Exception e2) {
 					// TODO: handle exception
-					floor = 0;
-					depot = 0;
 				}
 				String user2;
 				if(cb_typeCompte.getSelectedIndex() == 1) {
@@ -150,6 +145,13 @@ public class OuvrirCompte extends JPanel{
 		gbc.gridx = 1;
 		gbc.gridy = 6;
 		this.add(btn_nouveauCompte, gbc);
+	}
+	
+	public void updateCBX() {
+		for (User user : connexionDataBase.getUsers()) {
+			cb_user2.addItem(user.getFirstName()+"_"+user.getId());
+		}
+
 	}
 	
 	protected NumberFormatter createFormatter(long minValue, long maxValue) {

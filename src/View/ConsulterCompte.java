@@ -46,6 +46,9 @@ public class ConsulterCompte extends JPanel{
 	private JTextField txt_montantCompte1;
 	private JTextField txt_montantCompte2;
 	
+	private JLabel lbl_montantCompte1;
+	private JLabel lbl_montantCompte2;
+	
 	private JFormattedTextField txt_decouvertCpt1;
 	private JFormattedTextField txt_decouvertCpt2;
 	
@@ -53,6 +56,10 @@ public class ConsulterCompte extends JPanel{
 	
 	private String decouvert1 = "";
 	private String decouvert2 = "";
+	
+	private Account account1;
+	private Account account2;
+	
 	public ConsulterCompte() {
 		this.connexionDataBase = new ConnexionDataBase();
 		this.controllerButton = new ControllerButton();
@@ -62,8 +69,8 @@ public class ConsulterCompte extends JPanel{
 		this.setLayout(new GridBagLayout());
 	
 		JLabel lbl_montantTotal = new JLabel("Solde total : ");
-		JLabel lbl_montantCompte1 = new JLabel("Solde du premier compte : ");
-		JLabel lbl_montantCompte2 = new JLabel("Solde du second compte : ");
+		lbl_montantCompte1 = new JLabel("Solde du premier compte : ");
+		lbl_montantCompte2 = new JLabel("Solde du second compte : ");
 		JLabel lbl_decouvertCpt1 = new JLabel("Découvert autorisé : ");
 		JLabel lbl_decouvertCpt2 = new JLabel("Découvert autorisé : ");
 		JLabel lbl_listOpe = new JLabel("Liste des opérations : ");
@@ -91,8 +98,8 @@ public class ConsulterCompte extends JPanel{
 		
 		jTable.disable();
 
-		txt_decouvertCpt1 = new JFormattedTextField();
-		txt_decouvertCpt2 = new JFormattedTextField();
+		txt_decouvertCpt1 = new JFormattedTextField(createFormatter(0, 10000));
+		txt_decouvertCpt2 = new JFormattedTextField(createFormatter(0, 10000));
 		
 		JButton btn_decouvertCpt1 = new JButton();
 		btn_decouvertCpt1.setText("Valider");
@@ -103,13 +110,14 @@ public class ConsulterCompte extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String plafond = txt_decouvertCpt1.getText();
-				// plafond = plafond.replace("-", "").replace("€", "").trim();
 				Float floor = Float.parseFloat(plafond);
-				//System.out.println(plafond);
-				boolean isOk = controllerButton.updateFloor(1,floor);
-				if(isOk) {
-					decouvert1 = plafond;
+				if(account1 != null) {
+					boolean isOk = controllerButton.updateFloor(account1.getId(),floor);
+					if(isOk) {
+						decouvert1 = plafond;
+					}
 				}
+				
 			}
 		});
 		
@@ -122,12 +130,12 @@ public class ConsulterCompte extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String plafond = txt_decouvertCpt2.getText();
-				// plafond = plafond.replace("-", "").replace("€", "").trim();
 				Float floor = Float.parseFloat(plafond);
-				//System.out.println(plafond);
-				boolean isOk = controllerButton.updateFloor(2,floor);
-				if(isOk) {
-					decouvert2 = plafond;
+				if(account1 != null) {
+					boolean isOk = controllerButton.updateFloor(account2.getId(),floor);
+					if(isOk) {
+						decouvert2 = plafond;
+					}
 				}
 			}
 		});
@@ -249,28 +257,37 @@ public class ConsulterCompte extends JPanel{
 	public void updateValues() {
 		txt_montantTotal.setText(connexionDataBase.getSoldTotal());
 		ArrayList<Account> accounts = connexionDataBase.getAccountFromUser();
-		System.out.println(accounts.get(0).sold);
-		String sold1 = accounts.get(0).sold+"";
-		decouvert1 = accounts.get(0).getFloor()+"";
-		txt_decouvertCpt1.setText(accounts.get(0).getFloor()+"");
-		txt_montantCompte1.setText(sold1);
-		int id2 = -1;
-		if(accounts.size() > 1) {
-			String sold2 = accounts.get(1).sold+"";
-			txt_montantCompte2.setText(sold2);
-			decouvert2 = accounts.get(1).getFloor()+"";
-			txt_decouvertCpt2.setText(accounts.get(1).getFloor()+"");
-			id2 = accounts.get(1).getId();
+		if(!accounts.isEmpty()) {
+			account1 = accounts.get(0);
+			String sold1 = accounts.get(0).sold+"";
+			decouvert1 = accounts.get(0).getFloor()+"";
+			lbl_montantCompte1.setText("Solde du premier compte (n°"+accounts.get(0).getId()+") : "); ;
+			txt_decouvertCpt1.setText(accounts.get(0).getFloor()+"");
+			txt_montantCompte1.setText(sold1);
+			int id2 = -1;
+			if(accounts.size() > 1) {
+				account2 = accounts.get(1);
+				String sold2 = accounts.get(1).sold+"";
+				txt_montantCompte2.setText(sold2);
+				decouvert2 = accounts.get(1).getFloor()+"";
+				lbl_montantCompte2.setText("Solde du second compte (n°"+accounts.get(1).getId()+") : "); ;
+				txt_decouvertCpt2.setText(accounts.get(1).getFloor()+"");
+				id2 = accounts.get(1).getId();
+			}
+			updateTableBDD(accounts.get(0).getId(), id2, 10, dataTable);
 		}
-		updateTableBDD(accounts.get(0).getId(), id2, 10, dataTable);
+		
 	}
 	
-	protected NumberFormatter createFormatter(int minValue, int maxValue) {
+	protected NumberFormatter createFormatter(long minValue, long maxValue) {
 		 NumberFormat longFormat = NumberFormat.getIntegerInstance();
 
 		 NumberFormatter numberFormatter = new NumberFormatter(longFormat);
 		 
 		 numberFormatter.setValueClass(Long.class);
+		 
+		 numberFormatter.setAllowsInvalid(true);
+		 
 		 numberFormatter.setMinimum(minValue);
 		 
 		 if (maxValue != -1)
@@ -279,40 +296,15 @@ public class ConsulterCompte extends JPanel{
 	    return numberFormatter;
 	}
 
-	public void updateTable(DefaultTableModel dataTable) {
-		Account account = new Account();
-		List<Transaction> transactions = new ArrayList<Transaction>();
-		
-		transactions.add(new Transaction(0, "Dépot", account, 500,  new Date()));
-		transactions.add(new Transaction(0, "Retrait", account, 110,  new Date()));
-		transactions.add(new Transaction(0, "Retrait", account, 20,  new Date()));
-		transactions.add(new Transaction(0, "Dépot", account, 10,  new Date()));
-		
-		dataTable.setRowCount(0);
-		
-		for (Transaction transaction : transactions) {
-			Vector row = new Vector();
-			
-			row.add(transaction.getDate());
-			row.add(transaction.getName());
-			row.add(transaction.getAccount());
-			row.add(transaction.getMontant());
-			
-			dataTable.addRow(row);
-		}
-		
-	}
 	
 	public void updateTableBDD(int id1, int id2, int limit, DefaultTableModel dataTable) {
 		Account account = new Account();
 		Map<Integer, Transaction> transactions = connexionDataBase.getTransactionWithLimit(id1, id2, limit);
 		
 		dataTable.setRowCount(0);
-		System.out.println(transactions);
 		for (Map.Entry<Integer, Transaction> entry :  transactions.entrySet()) {
 			Integer key = entry.getKey();
 			Transaction val = entry.getValue();
-			System.out.println(val);
 			Vector row = new Vector();
 			
 			row.add(val.getDate());

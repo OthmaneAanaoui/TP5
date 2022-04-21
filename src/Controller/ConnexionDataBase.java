@@ -43,14 +43,13 @@ public class ConnexionDataBase {
 	public ArrayList<Object> getVersion() {
 		ArrayList<Object> list = new ArrayList<Object>();
 		try {
-			ResultSet res = statement.executeQuery("SELECT * FROM \"public\".\"Version\"");
+			ResultSet res = statement.executeQuery("SELECT * FROM \"public\".\"Version\" ORDER BY date DESC");
 			
 			
 			while(res.next()) {
 				list.add(res.getString(1));
 				list.add(res.getDate(2));
 				list.add(res.getString(3));
-				System.out.println(res.getString(1)+" "+res.getDate(2)+" "+res.getString(3));
 			}
 			res.close();
 			
@@ -81,7 +80,7 @@ public class ConnexionDataBase {
 		ArrayList<User> users = new ArrayList<User>();
 		User user = null;
 		try {
-			ResultSet res = statement.executeQuery("SELECT * FROM \"public\".\"User\" WHERE \"numberAccount\" IN (0,1)");
+			ResultSet res = statement.executeQuery("SELECT * FROM \"public\".\"User\" WHERE \"numberAccount\" IN (0,1) AND id NOT IN("+userConnected.getId()+")");
 			
 			while(res.next()) {
 				user = new User(res.getInt("id"),res.getString("firstName"), res.getString("lastName"), res.getString("email"), res.getString("password"));
@@ -155,7 +154,6 @@ public class ConnexionDataBase {
 			e.printStackTrace();
 		}
 		getAccountFromUser();
-		//System.out.println(userAccounts.size());
 		return userConnected;
 	}
 	
@@ -180,7 +178,6 @@ public class ConnexionDataBase {
 		boolean isCreated = false;
 		String req = "INSERT INTO \"public\".\"Account\" (\"id\",\"id_user\",\"type\",\"sold\",\"floor\")\r\n"
 				+ "					VALUES (nextval('\"User_id_seq\"'::regclass),'"+ idUsers +"','"+ type +"',"+ 0 +","+ floor +")";
-		System.out.println(req);
 		try {
 			int res = statement.executeUpdate(req);
 			if(res == 1) {
@@ -196,7 +193,7 @@ public class ConnexionDataBase {
 		return isCreated;
 	}
 	
-	public boolean createTransaction(String name,int idUser, float montant,int idAccount) {
+	public int createTransaction(String name,int idUser, float montant,int idAccount) {
 		boolean isCreated = false;
 		Date date = new Date();
 		int id;
@@ -213,7 +210,6 @@ public class ConnexionDataBase {
 					+ "					VALUES (nextval('\"User_id_seq\"'::regclass),'"+ name +"',"+ id +","+ montant +",'"+date+"')");
 			if(res == 1) {
 				System.out.println("Transaction created");
-				////account = new Account(, res, null, null, res)
 				isCreated = true;
 			}
 			
@@ -221,14 +217,14 @@ public class ConnexionDataBase {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return isCreated;
+		return id;
 	}
 	
 	public Account getLastAccount(int id) {
 		Account account = null;
 		Dictionary<Integer,User> allUsers = getAllUsers();
 		try {
-			ResultSet res = statement.executeQuery("SELECT max(id) , id_user FROM \"public\".\"Account\" WHERE id_user = '{"+id+"}' GROUP BY id_user LIMIT 1");
+			ResultSet res = statement.executeQuery("SELECT * FROM \"public\".\"Account\" WHERE id = (SELECT max(id) FROM \"public\".\"Account\") AND id_user = '{"+id+"}' LIMIT 1");
 			
 			while(res.next()) {
 				String users_id = res.getString("id_user");
@@ -273,9 +269,8 @@ public class ConnexionDataBase {
 		int somme = 0;
 		String reslut = "0";
 		try {
-			System.out.println(userConnected.getId());
 			ResultSet res = statement.executeQuery("SELECT sold FROM \"public\".\"Account\" WHERE "+userConnected.getId()+" = ANY (id_user)");
-			while(res.next()) { //SELECT "id_user" FROM "public"."Account" WHERE "id_user" LIKE '{%1%}'::integer[]
+			while(res.next()) {
 				somme += res.getInt("sold");
 				
 			}
@@ -298,7 +293,6 @@ public class ConnexionDataBase {
 		
 		try {
 			ResultSet res = statement.executeQuery("SELECT * FROM \"public\".\"Account\" WHERE "+userConnected.getId()+" = ANY (id_user) ORDER BY id;");
-			//System.out.println(res);
 			while(res.next()) {
 				String users_id = res.getString("id_user");
 				Type type = Type.valueOf(res.getString("type"));
@@ -309,12 +303,11 @@ public class ConnexionDataBase {
 				users_id = users_id.replace("}", "");
 				String[] array = users_id.split(",");
 				
-				User[] users = new User[array.length]; //
+				User[] users = new User[array.length];
 				for (int i = 0; i < array.length; i++) {
 					User user = allUsers.get(Integer.parseInt(array[i]));
 					users[i] = user;
 				}
-				//System.out.println(Arrays.toString(users));
 				accounts.add(new Account(id, users , type , floor,sold));
 				useraccounts.put(id, new Account(id, users , type , floor,sold));
 			}
@@ -335,13 +328,11 @@ public class ConnexionDataBase {
 		try {
 			ResultSet res;
 			if(id2 != -1) {
-				res = statement.executeQuery("SELECT * FROM \"public\".\"Transaction\" WHERE id_account IN ("+id1+","+id2+") LIMIT '"+limit+"';");
+				res = statement.executeQuery("SELECT * FROM \"public\".\"Transaction\" WHERE id_account IN ("+id1+","+id2+") ORDER BY id DESC LIMIT '"+limit+"';");
 			}
 			else {
-				res = statement.executeQuery("SELECT * FROM \"public\".\"Transaction\" WHERE id_account IN ("+id1+") LIMIT "+limit+";");
+				res = statement.executeQuery("SELECT * FROM \"public\".\"Transaction\" WHERE id_account IN ("+id1+") ORDER BY id DESC LIMIT "+limit+";");
 			}
-			
-			//System.out.println(res);
 			while(res.next()) {
 				int idTransaction = res.getInt("id");
 				String name = res.getString("name");
@@ -349,7 +340,6 @@ public class ConnexionDataBase {
 				Account account = allAccounts.get(idAccount);
 				float montant = res.getFloat("montant");
 				Date date = res.getDate("date");
-				System.out.println("hey");
 				transactions.put(idTransaction,new Transaction(idTransaction, name, account, montant, date));
 			}
 			res.close();
@@ -358,6 +348,21 @@ public class ConnexionDataBase {
 			e.printStackTrace();
 		}
 		return transactions;
+	}
+	
+	public void firstTransaction(int idAccount, float montant) {
+		boolean isUpdated = false;
+		try {
+			int res = statement.executeUpdate("UPDATE \"public\".\"Account\" SET \"sold\" = "+montant+" WHERE id = "+idAccount);
+			if(res == 1) {
+				System.out.println("account updated");
+				isUpdated = true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		getAccountFromUser();
 	}
 	
 	public void addMoney(int idAccount, float montant) {
@@ -384,7 +389,7 @@ public class ConnexionDataBase {
 			try {
 				int res = statement.executeUpdate("UPDATE \"public\".\"Account\" SET \"sold\" = "+sold+" WHERE id = "+idAccount);
 				if(res == 1) {
-					System.out.println("account updated");
+					System.out.println("Account updated");
 					isUpdated = true;
 					createTransaction("Retrait", userConnected.getId(), montant, idAccount);
 				}
@@ -399,8 +404,8 @@ public class ConnexionDataBase {
 	
 	public boolean updateFloor(int id, float floor) {
 		boolean isUpdated = false;
-		
-		Enumeration<Integer> test = userAccounts.keys();
+		System.out.println(id);
+		/*Enumeration<Integer> test = userAccounts.keys();
 		
 		Integer[] ids = new Integer[2];
 		int i = 0;
@@ -408,16 +413,18 @@ public class ConnexionDataBase {
 			Integer integer = (Integer) test.nextElement();
 			ids[i] = integer;
 			i++;
-		}
-		System.out.println(id);
-		System.out.println(ids);
-		int idAccount = ids[id-1];
+		}*/
+		//System.out.println(ids[0]);
+		//System.out.println(ids[1]);
+		//int idAccount = ids[id-1];
+		int idAccount = id;
+		//System.out.println(idAccount);
 		if(userAccounts.get(idAccount) != null) {
 			if(userAccounts.get(idAccount).floor != floor) {
 				try {
 					int res = statement.executeUpdate("UPDATE \"public\".\"Account\" SET \"floor\" = "+floor+" WHERE id = "+idAccount);
 					if(res == 1) {
-						System.out.println("account updated");
+						System.out.println("Account updated");
 						isUpdated = true;
 					}
 				} catch (SQLException e) {

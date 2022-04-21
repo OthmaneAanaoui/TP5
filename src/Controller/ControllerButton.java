@@ -44,7 +44,6 @@ public class ControllerButton {
 	public boolean addAccount(String type, float floor, float montantTransaction, String user2) {
 		String usersId;
 		boolean isAdding = false;
-		System.out.println(user.getNumberAccount());
 		if(user.getNumberAccount() < 2) {
 			
 			user.setNumberAccount(user.getNumberAccount()+1);
@@ -55,12 +54,12 @@ public class ControllerButton {
 			else {
 				usersId = "{"+user.id+"}";
 			}
-			
 			boolean isOk = connexionDataBase.createAccount(usersId, type, floor);
 			if(isOk) {
 				isAdding = true;
 				if(montantTransaction > 0) {
-					connexionDataBase.createTransaction("depot", user.id, montantTransaction,-1);
+					int idAccount = connexionDataBase.createTransaction("depot", user.id, montantTransaction, -1);
+					connexionDataBase.firstTransaction(idAccount, montantTransaction);
 				}
 				connexionDataBase.updateNumberAccount(user.getId(), user.getNumberAccount());
 			}
@@ -103,6 +102,7 @@ public class ControllerButton {
 	public void switchPanel(String panel) {
 		switch (panel) {
 	        case "ouvrirCompte":
+	        controller.mainView.getOuvrirCompte().updateCBX();
 	        controller.mainView.setContentPane(controller.mainView.getOuvrirCompte());
 	        controller.mainView.revalidate();
 	        break;
