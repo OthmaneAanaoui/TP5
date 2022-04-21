@@ -13,6 +13,7 @@ import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Map;
 
 import Model.Account;
 import Model.Transaction;
@@ -146,6 +147,7 @@ public class ConnexionDataBase {
 			e.printStackTrace();
 		}
 		getAccountFromUser();
+		//System.out.println(userAccounts.size());
 		return userConnected;
 	}
 	
@@ -200,7 +202,7 @@ public class ConnexionDataBase {
 		
 		try {
 			int res = statement.executeUpdate("INSERT INTO \"public\".\"Transaction\" (\"id\",\"name\",\"id_account\",\"montant\",\"date\")\r\n"
-					+ "					VALUES (nextval('\"User_id_seq\"'::regclass),"+ name +",'"+ id +"',"+ montant +",'"+date+"')");
+					+ "					VALUES (nextval('\"User_id_seq\"'::regclass),'"+ name +"',"+ id +","+ montant +",'"+date+"')");
 			if(res == 1) {
 				System.out.println("Transaction created");
 				////account = new Account(, res, null, null, res)
@@ -317,18 +319,18 @@ public class ConnexionDataBase {
 		return accounts;
 	}
 	
-	public Dictionary<Integer,Transaction> getTransactionWithLimit(int id1, int id2, int limit){
+	public Map<Integer,Transaction> getTransactionWithLimit(int id1, int id2, int limit){
 		
-		Dictionary<Integer,Transaction> transactions = new Hashtable<Integer,Transaction>();
+		Map<Integer,Transaction> transactions = new Hashtable<Integer,Transaction>();
 		Dictionary<Integer,Account> allAccounts = getAllAccount();
 		
 		try {
 			ResultSet res;
 			if(id2 != -1) {
-				res = statement.executeQuery("SELECT * FROM \"public\".\"Transaction\" WHERE id_account IN ("+id1+","+id2+") LIMITE "+limit+";");
+				res = statement.executeQuery("SELECT * FROM \"public\".\"Transaction\" WHERE id_account IN ("+id1+","+id2+") LIMIT '"+limit+"';");
 			}
 			else {
-				res = statement.executeQuery("SELECT * FROM \"public\".\"Transaction\" WHERE id_account IN ("+id1+") LIMITE "+limit+";");
+				res = statement.executeQuery("SELECT * FROM \"public\".\"Transaction\" WHERE id_account IN ("+id1+") LIMIT "+limit+";");
 			}
 			
 			//System.out.println(res);
@@ -339,6 +341,7 @@ public class ConnexionDataBase {
 				Account account = allAccounts.get(idAccount);
 				float montant = res.getFloat("montant");
 				Date date = res.getDate("date");
+				System.out.println("hey");
 				transactions.put(idTransaction,new Transaction(idTransaction, name, account, montant, date));
 			}
 			res.close();
@@ -369,7 +372,7 @@ public class ConnexionDataBase {
 	public boolean withdrawMoney(int idAccount, float montant) {
 		float sold = userAccounts.get(idAccount).getSold() - montant;
 		boolean isUpdated = false;
-		if(sold >= userAccounts.get(idAccount).getFloor()) {
+		if(sold >= -userAccounts.get(idAccount).getFloor()) {
 			try {
 				int res = statement.executeUpdate("UPDATE \"public\".\"Account\" SET \"sold\" = "+sold+" WHERE id = "+idAccount);
 				if(res == 1) {
@@ -385,4 +388,6 @@ public class ConnexionDataBase {
 		}
 		return isUpdated;
 	}
+	
+	
 }

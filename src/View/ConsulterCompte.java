@@ -12,7 +12,10 @@ import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Dictionary;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -43,8 +46,10 @@ public class ConsulterCompte extends JPanel{
 	private JTextField txt_montantCompte1;
 	private JTextField txt_montantCompte2;
 	
-	JFormattedTextField txt_decouvertCpt1;
-	JFormattedTextField txt_decouvertCpt2;
+	private JFormattedTextField txt_decouvertCpt1;
+	private JFormattedTextField txt_decouvertCpt2;
+	
+	private DefaultTableModel dataTable;
 	public ConsulterCompte() {
 		this.connexionDataBase = new ConnexionDataBase();
 		this.controllerButton = new ControllerButton();
@@ -71,14 +76,17 @@ public class ConsulterCompte extends JPanel{
 		
 		JTable jTable = new JTable();
 		JScrollPane jScrollPane = new JScrollPane(jTable);
-		DefaultTableModel dataTable = new DefaultTableModel();
+		dataTable = new DefaultTableModel();
 		
 		dataTable.addColumn("Date");
 		dataTable.addColumn("Type");
 		dataTable.addColumn("Compte");
 		dataTable.addColumn("Montant");
 		
+		
 		jTable.setModel(dataTable);
+		
+		jTable.disable();
 
 		txt_decouvertCpt1 = new JFormattedTextField();
 		txt_decouvertCpt2 = new JFormattedTextField();
@@ -219,7 +227,7 @@ public class ConsulterCompte extends JPanel{
 		gbc.gridx = 0;
 		this.add(lbl_listOpe, gbc);
 
-		updateTable(dataTable);
+		//updateTable(dataTable);
 		
 		gbc.gridy = 7;
 		gbc.gridx = 0;
@@ -232,12 +240,16 @@ public class ConsulterCompte extends JPanel{
 		ArrayList<Account> accounts = connexionDataBase.getAccountFromUser();
 		System.out.println(accounts.get(0).sold);
 		String sold1 = accounts.get(0).sold+"";
+		txt_decouvertCpt1.setText(accounts.get(0).getFloor()+"");
 		txt_montantCompte1.setText(sold1);
+		int id2 = -1;
 		if(accounts.size() > 1) {
 			String sold2 = accounts.get(1).sold+"";
 			txt_montantCompte2.setText(sold2);
+			txt_decouvertCpt2.setText(accounts.get(1).getFloor()+"");
+			id2 = accounts.get(1).getId();
 		}
-		
+		updateTableBDD(accounts.get(0).getId(), id2, 10, dataTable);
 	}
 	
 	protected NumberFormatter createFormatter(int minValue, int maxValue) {
@@ -277,4 +289,27 @@ public class ConsulterCompte extends JPanel{
 		}
 		
 	}
+	
+	public void updateTableBDD(int id1, int id2, int limit, DefaultTableModel dataTable) {
+		Account account = new Account();
+		Map<Integer, Transaction> transactions = connexionDataBase.getTransactionWithLimit(id1, id2, limit);
+		
+		dataTable.setRowCount(0);
+		System.out.println(transactions);
+		for (Map.Entry<Integer, Transaction> entry :  transactions.entrySet()) {
+			Integer key = entry.getKey();
+			Transaction val = entry.getValue();
+			System.out.println(val);
+			Vector row = new Vector();
+			
+			row.add(val.getDate());
+			row.add(val.getName());
+			row.add("Compte n°"+val.getAccount().getId());
+			row.add(val.getMontant());
+			
+			dataTable.addRow(row);
+		}
+		
+	}
+	
 }

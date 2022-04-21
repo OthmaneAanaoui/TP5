@@ -27,6 +27,8 @@ public class ControllerButton {
 			controller.login.setVisible(false);
 			controller.login.getTxt_mail().setText("");
 			controller.login.getTxt_mdp().setText("");
+			controller.mainView.getDepotPopUp().updateCBbox();
+			controller.mainView.getRetraitPopUp().updateCBbox();
 		}
 		
 	}
@@ -89,34 +91,42 @@ public class ControllerButton {
 	}
 	
 	public void showDepot() {
+		controller.mainView.getDepotPopUp().updateCBbox();
 		controller.mainView.getDepotPopUp().showPopUp();
 	}
 	
 	public void showRetrait() {
+		controller.mainView.getRetraitPopUp().updateCBbox();
 		controller.mainView.getRetraitPopUp().showPopUp();
 	}
 	
-	  public void switchPanel(String panel) {
-	        switch (panel) {
+	public void switchPanel(String panel) {
+		switch (panel) {
 	        case "ouvrirCompte":
-	            controller.mainView.setContentPane(controller.mainView.getOuvrirCompte());
-	            controller.mainView.revalidate();
-	            break;
-	        case "consulterCompte":
-	            controller.mainView.getConsulterCompte().updateValues();
-	            controller.mainView.setContentPane(controller.mainView.getConsulterCompte());
-	            controller.mainView.revalidate();
-	            break;
-	        case "aPropos":
-	            controller.mainView.setContentPane(controller.mainView.getaPropos());
-	            controller.mainView.revalidate();
-	            break;
-	        default:
-	            break;
-	        }
-	        
-	    }
+	        controller.mainView.setContentPane(controller.mainView.getOuvrirCompte());
+	        controller.mainView.revalidate();
+	        break;
+	    case "consulterCompte":
+	        controller.mainView.getConsulterCompte().updateValues();
+	        controller.mainView.setContentPane(controller.mainView.getConsulterCompte());
+	        controller.mainView.revalidate();
+	        break;
+	    case "aPropos":
+	        controller.mainView.setContentPane(controller.mainView.getaPropos());
+	        controller.mainView.revalidate();
+	        break;
+	    default:
+	        break;
+	   }
+	}
 	
+	public void addMoney(int idAccount,float montant) {
+		connexionDataBase.addMoney(idAccount, montant);
+	}
+	
+	public void withdrawMoney(int idAccount,float montant) {
+		connexionDataBase.withdrawMoney(idAccount, montant);
+	}
 	
 	
 }

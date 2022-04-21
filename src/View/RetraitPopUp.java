@@ -11,7 +11,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import Controller.ConnexionDataBase;
+import Controller.ControllerButton;
+import Model.Account;
+
 public class RetraitPopUp  {
+	private ControllerButton controllerButton;
+	private ConnexionDataBase connexionDataBase;
+	
 	JComboBox choixCompte;
 	JTextField txtMontantDepot;
 	JTextField txtSolde;
@@ -19,6 +26,8 @@ public class RetraitPopUp  {
 	JPanel container;
 	
 	public RetraitPopUp() {
+		this.controllerButton = new ControllerButton();
+		this.connexionDataBase = new ConnexionDataBase();
 		
 		JLabel lblChoixCompte = new JLabel("Choix du compte :");
 		JLabel lblMontantDepot = new JLabel("Montant du retrait :");
@@ -36,6 +45,27 @@ public class RetraitPopUp  {
 		
 		if (choix == JOptionPane.OK_OPTION) {
 			System.out.println("it's okay");
+			if(!txtMontantDepot.getText().isEmpty()) {
+				
+				try {
+					String choixCpt = (String) choixCompte.getSelectedItem();
+					int id = Integer.parseInt(choixCpt.split("_")[0]) ;
+					float motant = Float.parseFloat(txtMontantDepot.getText());
+					controllerButton.withdrawMoney(id,motant);
+				} catch (Exception e) {
+					// TODO: handle exception
+					System.out.println(e.getMessage());
+				}
+				
+				
+			}
+		}
+	}
+	
+	public void updateCBbox(){
+		choixCompte.removeAllItems();
+		for (Account account : connexionDataBase.getAccountFromUser()) {
+			choixCompte.addItem(account.getId() +"_"+account.getType()+"| Motant : "+account.getSold());
 		}
 	}
 }
