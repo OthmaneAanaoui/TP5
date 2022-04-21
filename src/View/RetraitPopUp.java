@@ -52,6 +52,7 @@ public class RetraitPopUp  {
 					int id = Integer.parseInt(choixCpt.split("_")[0]) ;
 					float motant = Float.parseFloat(txtMontantDepot.getText());
 					controllerButton.withdrawMoney(id,motant);
+					controllerButton.switchPanel("consulterCompte");
 				} catch (Exception e) {
 					// TODO: handle exception
 					System.out.println(e.getMessage());

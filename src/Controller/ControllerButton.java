@@ -128,5 +128,7 @@ public class ControllerButton {
 		connexionDataBase.withdrawMoney(idAccount, montant);
 	}
 	
-	
+	public boolean updateFloor(int id,float floor) {
+		return connexionDataBase.updateFloor(id, floor);
+	}
 }

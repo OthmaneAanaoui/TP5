@@ -51,6 +51,7 @@ public class DepotPopUp {
 					int id = Integer.parseInt(choixCpt.split("_")[0]) ;
 					float motant = Float.parseFloat(txtMontantDepot.getText());
 					controllerButton.addMoney(id,motant);
+					controllerButton.switchPanel("consulterCompte");
 				} catch (Exception e) {
 					// TODO: handle exception
 					System.out.println(e.getMessage());

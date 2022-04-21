@@ -10,9 +10,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Dictionary;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import Model.Account;
@@ -38,11 +40,16 @@ public class ConnexionDataBase {
 		}
 	}
 	
-	public void getVersion() {
+	public ArrayList<Object> getVersion() {
+		ArrayList<Object> list = new ArrayList<Object>();
 		try {
 			ResultSet res = statement.executeQuery("SELECT * FROM \"public\".\"Version\"");
 			
+			
 			while(res.next()) {
+				list.add(res.getString(1));
+				list.add(res.getDate(2));
+				list.add(res.getString(3));
 				System.out.println(res.getString(1)+" "+res.getDate(2)+" "+res.getString(3));
 			}
 			res.close();
@@ -51,6 +58,7 @@ public class ConnexionDataBase {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return list;
 	}
 	
 	public User getUserById(int id) {
@@ -289,7 +297,7 @@ public class ConnexionDataBase {
 		Dictionary<Integer,User> allUsers = getAllUsers();
 		
 		try {
-			ResultSet res = statement.executeQuery("SELECT * FROM \"public\".\"Account\" WHERE "+userConnected.getId()+" = ANY (id_user);");
+			ResultSet res = statement.executeQuery("SELECT * FROM \"public\".\"Account\" WHERE "+userConnected.getId()+" = ANY (id_user) ORDER BY id;");
 			//System.out.println(res);
 			while(res.next()) {
 				String users_id = res.getString("id_user");
@@ -389,5 +397,38 @@ public class ConnexionDataBase {
 		return isUpdated;
 	}
 	
+	public boolean updateFloor(int id, float floor) {
+		boolean isUpdated = false;
+		
+		Enumeration<Integer> test = userAccounts.keys();
+		
+		Integer[] ids = new Integer[2];
+		int i = 0;
+		while (test.hasMoreElements()) {
+			Integer integer = (Integer) test.nextElement();
+			ids[i] = integer;
+			i++;
+		}
+		System.out.println(id);
+		System.out.println(ids);
+		int idAccount = ids[id-1];
+		if(userAccounts.get(idAccount) != null) {
+			if(userAccounts.get(idAccount).floor != floor) {
+				try {
+					int res = statement.executeUpdate("UPDATE \"public\".\"Account\" SET \"floor\" = "+floor+" WHERE id = "+idAccount);
+					if(res == 1) {
+						System.out.println("account updated");
+						isUpdated = true;
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return isUpdated;
+		
+	}
 	
 }

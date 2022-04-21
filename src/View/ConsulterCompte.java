@@ -50,6 +50,9 @@ public class ConsulterCompte extends JPanel{
 	private JFormattedTextField txt_decouvertCpt2;
 	
 	private DefaultTableModel dataTable;
+	
+	private String decouvert1 = "";
+	private String decouvert2 = "";
 	public ConsulterCompte() {
 		this.connexionDataBase = new ConnexionDataBase();
 		this.controllerButton = new ControllerButton();
@@ -101,8 +104,12 @@ public class ConsulterCompte extends JPanel{
 			public void actionPerformed(ActionEvent e) {
 				String plafond = txt_decouvertCpt1.getText();
 				// plafond = plafond.replace("-", "").replace("€", "").trim();
-				
-				System.out.println(plafond);
+				Float floor = Float.parseFloat(plafond);
+				//System.out.println(plafond);
+				boolean isOk = controllerButton.updateFloor(1,floor);
+				if(isOk) {
+					decouvert1 = plafond;
+				}
 			}
 		});
 		
@@ -116,8 +123,12 @@ public class ConsulterCompte extends JPanel{
 			public void actionPerformed(ActionEvent e) {
 				String plafond = txt_decouvertCpt2.getText();
 				// plafond = plafond.replace("-", "").replace("€", "").trim();
-				
-				System.out.println(plafond);
+				Float floor = Float.parseFloat(plafond);
+				//System.out.println(plafond);
+				boolean isOk = controllerButton.updateFloor(2,floor);
+				if(isOk) {
+					decouvert2 = plafond;
+				}
 			}
 		});
 		
@@ -138,7 +149,7 @@ public class ConsulterCompte extends JPanel{
 			}
 			
 			public void warn() {
-				if (!txt_decouvertCpt1.getText().equals(""))
+				if (!txt_decouvertCpt1.getText().equals(decouvert1))
 					btn_decouvertCpt1.setVisible(true);
 				else 
 					btn_decouvertCpt1.setVisible(false);
@@ -163,7 +174,7 @@ public class ConsulterCompte extends JPanel{
 			}
 			
 			public void warn() {
-				if (!txt_decouvertCpt2.getText().equals(""))
+				if (!txt_decouvertCpt2.getText().equals(decouvert2))
 					btn_decouvertCpt2.setVisible(true);
 				else 
 					btn_decouvertCpt2.setVisible(false);
@@ -240,12 +251,14 @@ public class ConsulterCompte extends JPanel{
 		ArrayList<Account> accounts = connexionDataBase.getAccountFromUser();
 		System.out.println(accounts.get(0).sold);
 		String sold1 = accounts.get(0).sold+"";
+		decouvert1 = accounts.get(0).getFloor()+"";
 		txt_decouvertCpt1.setText(accounts.get(0).getFloor()+"");
 		txt_montantCompte1.setText(sold1);
 		int id2 = -1;
 		if(accounts.size() > 1) {
 			String sold2 = accounts.get(1).sold+"";
 			txt_montantCompte2.setText(sold2);
+			decouvert2 = accounts.get(1).getFloor()+"";
 			txt_decouvertCpt2.setText(accounts.get(1).getFloor()+"");
 			id2 = accounts.get(1).getId();
 		}
