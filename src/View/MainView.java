@@ -10,6 +10,7 @@ public class MainView extends JFrame{
 	private DepotPopUp depotPopUp;
 	private RetraitPopUp retraitPopUp;
 	private APropos aPropos;
+	private Chat chat;
 	
 	public MainView() {
 		this.depotPopUp = new DepotPopUp();
@@ -20,10 +21,12 @@ public class MainView extends JFrame{
 		this.consulterCompte = new ConsulterCompte();
 		this.OuvrirCompte = new OuvrirCompte();
 		this.aPropos = new APropos();
+		this.chat = new Chat();
 		
 		this.add(aPropos);
 		this.add(consulterCompte);
 		this.add(OuvrirCompte);
+		this.add(chat);
 		
 		this.setJMenuBar(new MenuBar());
 		
@@ -72,5 +75,13 @@ public class MainView extends JFrame{
 
 	public void setaPropos(APropos aPropos) {
 		this.aPropos = aPropos;
+	}
+	
+	public Chat getChat() {
+		return chat;
+	}
+
+	public void setChat(Chat chat) {
+		this.chat = chat;
 	}
 }

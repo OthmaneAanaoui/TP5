@@ -15,6 +15,8 @@ public class MenuBar extends JMenuBar{
 	private JMenu ouvrireComp;
 	private JMenu consulterCompte;
 	private JMenu option;
+	private JMenu chat;
+	
 	private ControllerButton controllerButton;
 	
 	public MenuBar() {
@@ -25,6 +27,7 @@ public class MenuBar extends JMenuBar{
 	public void BuildMenu() {
 		this.MenuOuvrireCompte();
 		this.MenuConsulterCompte();
+		this.MenuChat();
 		this.MenuOption();
 	}
 	
@@ -63,7 +66,6 @@ public class MenuBar extends JMenuBar{
 				controllerButton.switchPanel("ouvrirCompte");
 			}
 		});
-		
 		
 		this.add(ouvrireComp);
 	}
@@ -150,5 +152,44 @@ public class MenuBar extends JMenuBar{
 		});
 		
 		this.add(option);
+	}
+
+	public void MenuChat() {
+		chat = new JMenu("Chat");
+		
+		chat.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				controllerButton.switchPanel("chat");
+			}
+		});
+		
+		this.add(chat);
 	}
 }
