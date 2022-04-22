@@ -116,6 +116,7 @@ public class ControllerButton {
 	        controller.mainView.revalidate();
 	        break;
 	    case "chat":
+	    	controller.mainView.getChat().updateCBX();
 	        controller.mainView.setContentPane(controller.mainView.getChat());
 	        controller.mainView.revalidate();
 	        break;
