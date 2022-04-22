@@ -95,6 +95,24 @@ public class ConnexionDataBase {
 		return users;
 	}
 	
+	public ArrayList<User> getUsersToChatWith() {
+		ArrayList<User> users = new ArrayList<User>();
+		User user = null;
+		try {
+			ResultSet res = statement.executeQuery("SELECT * FROM \"public\".\"User\" WHERE id NOT IN("+userConnected.getId()+")");
+			
+			while(res.next()) {
+				user = new User(res.getInt("id"),res.getString("firstName"), res.getString("lastName"), res.getString("email"), res.getString("password"));
+				users.add(user);
+			}
+			res.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return users;
+	}
+	
 	public Dictionary<Integer,User> getAllUsers() {
 		Dictionary<Integer,User> users = new Hashtable<Integer,User>();
 		User user = null;
@@ -442,7 +460,8 @@ public class ConnexionDataBase {
 	public ArrayList<Message> getMessages(int idUser) {
 		ArrayList<Message> messages = new ArrayList<Message>();
 		try {
-			ResultSet res = statement.executeQuery("SELECT * FROM \"public\".\"Message\" WHERE idUserSender IN ("+userConnected.getId()+","+idUser+") AND idUserReceiver IN ("+userConnected.getId()+","+idUser+");");
+			ResultSet res = statement.executeQuery("SELECT * FROM \"public\".\"message\" WHERE idUserSender IN ("+userConnected.getId()+","+idUser+") AND idUserReceiver IN ("+userConnected.getId()+","+idUser+") ORDER BY date DESC ;");
+			
 			while(res.next()) {
 				int id = res.getInt("id");
 				int idSender = res.getInt("idUserSender");
@@ -461,12 +480,21 @@ public class ConnexionDataBase {
 	public void createMessage(int idUserReceiver, String message) {
 		Date date = new Date();
 		try {
-			int res = statement.executeUpdate("INSERT INTO \"public\".\"Message\" (\"id\",\"idUserSender\",\"idUserReceiver\",\"message\",\"date\")\r\n"
+			int res = statement.executeUpdate("INSERT INTO \"public\".\"message\" (\"id\",\"idusersender\",\"iduserreceiver\",\"message\",\"date\")\r\n"
 					+ "					VALUES (nextval('\"message_id_seq\"'::regclass),"+ userConnected.getId() +","+ idUserReceiver +",'"+ message +"','"+date+"')");
 		} catch (Exception e) {
 			// TODO: handle exception
+			System.out.println(e);
 		}
-		
 	}
 	
+	//controller buutonn
+		/*public void refreshMessage() {
+			this.getMessages(1);
+		}
+		
+		public void sendMessage(int id ,String message) {
+			controller.mainView.vueMessage.refresh(controllerBD.getMessages(userReceiver));
+		}
+	*/
 }

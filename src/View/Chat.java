@@ -5,6 +5,8 @@ import java.awt.Cursor;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Map;
 import java.util.Vector;
 
@@ -20,6 +22,7 @@ import javax.swing.table.DefaultTableModel;
 import Controller.ConnexionDataBase;
 import Controller.ControllerButton;
 import Model.Account;
+import Model.Message;
 import Model.Transaction;
 import Model.User;
 
@@ -51,9 +54,42 @@ public class Chat extends JPanel{
 		btn_refresh.setText("Rafraichir");
 		btn_refresh.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		
+		btn_refresh.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				try {
+					String choixUser = (String) cb_userToSpeak.getSelectedItem();
+					int id = Integer.parseInt(choixUser.split("_")[1]);
+					updateTable(id);
+				} catch (Exception e2) {
+					// TODO: handle exception
+				}
+			}
+		});
+		
 		JButton btn_send = new JButton();
 		btn_send.setText("Envoyer");
 		btn_send.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		
+		btn_send.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				try {
+					String choixUser = (String) cb_userToSpeak.getSelectedItem();
+					int id = Integer.parseInt(choixUser.split("_")[1]);
+					String msg = txt_msg.getText();
+					connexionDataBase.createMessage(id, msg);
+					txt_msg.setText("");
+					updateTable(id);
+				} catch (Exception e2) {
+					// TODO: handle exception
+				}
+			}
+		});
 		
 		JTable jTable = new JTable();
 		JScrollPane jScrollPane = new JScrollPane(jTable);
@@ -70,7 +106,22 @@ public class Chat extends JPanel{
 		this.txt_msg = new JTextField();
 		this.cb_userToSpeak = new JComboBox();
 		
-		updateTable(dataTable);
+		cb_userToSpeak.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				try {
+					String choixUser = (String) cb_userToSpeak.getSelectedItem();
+					int id = Integer.parseInt(choixUser.split("_")[1]);
+					updateTable(id);
+				} catch (Exception e2) {
+					// TODO: handle exception
+				}
+			}
+		});
+		
+		
 		
 		panelNord.setLayout(new GridBagLayout());
 		panelSud.setLayout(new GridBagLayout());
@@ -122,22 +173,29 @@ public class Chat extends JPanel{
 	}
 	
 	public void updateCBX() {
-		for (User user : connexionDataBase.getUsers()) {
+		cb_userToSpeak.removeAllItems();
+		for (User user : connexionDataBase.getUsersToChatWith()) {
 			cb_userToSpeak.addItem(user.getFirstName()+"_"+user.getId());
 		}
 	}
 	
-	public void updateTable(DefaultTableModel dataTable) {
+	public void updateTable(int id) {
+		User userReceiver = connexionDataBase.getUserById(id);
 		dataTable.setRowCount(0);
-		for (int i = 0; i < 3; i++) {
+		for (Message message : connexionDataBase.getMessages(id)) {
 			Vector row = new Vector();
-			
-			row.add("user " + i);
-			row.add("date " + i);
-			row.add("msg " + i);
+			if(message.idUserSender == id) {
+				row.add(userReceiver.getFirstName()+" "+userReceiver.getLastName());
+			}
+			else {
+				row.add("Moi");
+			}
+			row.add("date " + message.date);
+			row.add("msg " +  message.message);
 			
 			dataTable.addRow(row);
 		}
+
 		
 	}
 }
