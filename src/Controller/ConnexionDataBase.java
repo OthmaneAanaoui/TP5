@@ -467,7 +467,7 @@ public class ConnexionDataBase {
 				int idSender = res.getInt("idUserSender");
 				int idReceiver = res.getInt("idUserReceiver");
 				String message = res.getString("message");
-				Date date = res.getDate("date");
+				Date date = res.getTimestamp("date");
 				messages.add(new Message(idSender,idReceiver,message,date));
 			}
 			
