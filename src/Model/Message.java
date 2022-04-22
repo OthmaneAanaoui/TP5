@@ -10,6 +10,7 @@ public class Message {
 	
 	public String message;
 	public Date date;
+	public byte media[];
 	public Message() {
 		// TODO Auto-generated constructor stub
 	}
@@ -25,6 +26,8 @@ public class Message {
 		this.idUserReceiver = idUserReceiver;
 		this.message = message;
 		this.date = date;
+		this.media = new byte[0];
+		
 	}
 	
 	
@@ -76,5 +79,18 @@ public class Message {
 	public void setDate(Date date) {
 		this.date = date;
 	}
+	/**
+	 * @return the media
+	 */
+	public byte[] getMedia() {
+		return media;
+	}
+	/**
+	 * @param media the media to set
+	 */
+	public void setMedia(byte[] media) {
+		this.media = media;
+	}
+	
 
 }
