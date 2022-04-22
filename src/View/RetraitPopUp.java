@@ -31,13 +31,13 @@ public class RetraitPopUp  {
 		
 		JLabel lblChoixCompte = new JLabel("Choix du compte :");
 		JLabel lblMontantDepot = new JLabel("Montant du retrait :");
-		JLabel lblSolde = new JLabel("Solde aprés opération :");
+		//JLabel lblSolde = new JLabel("Solde aprés opération :");
 	
 		choixCompte = new JComboBox();	
 		txtMontantDepot = new JTextField();
-		txtSolde = new JTextField();
+		//txtSolde = new JTextField();
 			
-		popUpTab = new Object[] {lblChoixCompte, choixCompte, lblMontantDepot, txtMontantDepot, lblSolde, txtSolde};
+		popUpTab = new Object[] {lblChoixCompte, choixCompte, lblMontantDepot, txtMontantDepot, txtSolde};
 	}
 	
 	public void showPopUp() {		
