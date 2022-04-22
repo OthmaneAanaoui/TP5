@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import Model.Account;
+import Model.Message;
 import Model.Transaction;
 import Model.Type;
 import Model.User;
@@ -177,7 +178,7 @@ public class ConnexionDataBase {
 	public boolean createAccount(String idUsers, String type, float floor) {
 		boolean isCreated = false;
 		String req = "INSERT INTO \"public\".\"Account\" (\"id\",\"id_user\",\"type\",\"sold\",\"floor\")\r\n"
-				+ "					VALUES (nextval('\"User_id_seq\"'::regclass),'"+ idUsers +"','"+ type +"',"+ 0 +","+ floor +")";
+				+ "					VALUES (nextval('\"Account_id_seq\"'::regclass),'"+ idUsers +"','"+ type +"',"+ 0 +","+ floor +")";
 		try {
 			int res = statement.executeUpdate(req);
 			if(res == 1) {
@@ -207,7 +208,7 @@ public class ConnexionDataBase {
 		
 		try {
 			int res = statement.executeUpdate("INSERT INTO \"public\".\"Transaction\" (\"id\",\"name\",\"id_account\",\"montant\",\"date\")\r\n"
-					+ "					VALUES (nextval('\"User_id_seq\"'::regclass),'"+ name +"',"+ id +","+ montant +",'"+date+"')");
+					+ "					VALUES (nextval('\"Transaction_id_seq\"'::regclass),'"+ name +"',"+ id +","+ montant +",'"+date+"')");
 			if(res == 1) {
 				System.out.println("Transaction created");
 				isCreated = true;
@@ -435,6 +436,36 @@ public class ConnexionDataBase {
 		}
 		
 		return isUpdated;
+		
+	}
+	
+	public ArrayList<Message> getMessages(int idUser) {
+		ArrayList<Message> messages = new ArrayList<Message>();
+		try {
+			ResultSet res = statement.executeQuery("SELECT * FROM \"public\".\"Message\" WHERE idUserSender IN ("+userConnected.getId()+","+idUser+") AND idUserReceiver IN ("+userConnected.getId()+","+idUser+");");
+			while(res.next()) {
+				int id = res.getInt("id");
+				int idSender = res.getInt("idUserSender");
+				int idReceiver = res.getInt("idUserReceiver");
+				String message = res.getString("message");
+				Date date = res.getDate("date");
+				messages.add(new Message(idSender,idReceiver,message,date));
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return messages;
+	}
+	
+	public void createMessage(int idUserReceiver, String message) {
+		Date date = new Date();
+		try {
+			int res = statement.executeUpdate("INSERT INTO \"public\".\"Message\" (\"id\",\"idUserSender\",\"idUserReceiver\",\"message\",\"date\")\r\n"
+					+ "					VALUES (nextval('\"message_id_seq\"'::regclass),"+ userConnected.getId() +","+ idUserReceiver +",'"+ message +"','"+date+"')");
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		
 	}
 	
