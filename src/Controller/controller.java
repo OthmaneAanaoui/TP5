@@ -3,6 +3,7 @@ package Controller;
 import View.Login;
 import View.MainView;
 import View.Signin;
+import View.view;
 
 public class controller {
 	static MainView mainView;

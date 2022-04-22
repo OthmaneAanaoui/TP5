@@ -7,15 +7,18 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.Map;
 import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
@@ -32,7 +35,7 @@ public class Chat extends JPanel{
 	private ConnexionDataBase connexionDataBase;
 	
 	private JComboBox cb_userToSpeak;
-	private JTextField txt_msg;
+	private JTextArea txt_msg;
 	
 	private DefaultTableModel dataTable;
 	
@@ -91,19 +94,40 @@ public class Chat extends JPanel{
 			}
 		});
 		
+		JButton btn_fileChosser = new JButton();
+		btn_fileChosser.setText("Fichier");
+		btn_fileChosser.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		
+		JFileChooser fileChooser = new JFileChooser("resources");
+		
+		btn_fileChosser.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				int rep = fileChooser.showOpenDialog(null);
+				
+				if (rep == JFileChooser.APPROVE_OPTION) {
+					File file = fileChooser.getSelectedFile();
+					
+					System.out.println(file.getName());
+					
+				}
+			}
+		});
+		btn_fileChosser.disable();
+		
 		JTable jTable = new JTable();
 		JScrollPane jScrollPane = new JScrollPane(jTable);
 		dataTable = new DefaultTableModel();
 		
 		dataTable.addColumn("Utilisateur");
 		dataTable.addColumn("Date");
-		dataTable.addColumn("Message");
 		
 		jTable.setModel(dataTable);
 		
 		jTable.disable();
 				
-		this.txt_msg = new JTextField();
+		this.txt_msg = new JTextArea();
 		this.cb_userToSpeak = new JComboBox();
 		
 		cb_userToSpeak.addActionListener(new ActionListener() {
@@ -121,8 +145,6 @@ public class Chat extends JPanel{
 			}
 		});
 		
-		
-		
 		panelNord.setLayout(new GridBagLayout());
 		panelSud.setLayout(new GridBagLayout());
 		
@@ -133,7 +155,7 @@ public class Chat extends JPanel{
 		gbc.weightx = 1;
 		gbc.gridy = 0;
 		gbc.gridx = 0;
-		gbc.insets = new Insets(10,35,5,35);
+		gbc.insets = new Insets(10,5,5,15);
 		panelNord.add(lbl_choixUser, gbc);
 		
 		gbc.gridwidth = 2;
@@ -159,13 +181,22 @@ public class Chat extends JPanel{
 		panelSud.add(lbl_msg, gbc);
 		
 		gbc.gridwidth = 2;
+		gbc.weighty = 3;
+		gbc.gridheight = 3;
 		gbc.gridy = 1;
 		gbc.gridx = 0;
 		panelSud.add(txt_msg, gbc);
 		
 		gbc.gridwidth = 1;
+		gbc.weightx = 0.25;
 		gbc.gridy = 1;
 		gbc.gridx = 2;
+		panelSud.add(btn_fileChosser, gbc);
+		
+		gbc.gridwidth = 1;
+		gbc.weightx = 0.25;
+		gbc.gridy = 1;
+		gbc.gridx = 3;
 		panelSud.add(btn_send, gbc);
 		
 		this.add(panelNord, BorderLayout.NORTH);
@@ -185,13 +216,13 @@ public class Chat extends JPanel{
 		for (Message message : connexionDataBase.getMessages(id)) {
 			Vector row = new Vector();
 			if(message.idUserSender == id) {
-				row.add(userReceiver.getFirstName()+" "+userReceiver.getLastName());
+				row.add(userReceiver.getFirstName()+" "+userReceiver.getLastName()+ " le "+ message.date);
 			}
 			else {
-				row.add("Moi");
+				row.add("Moi le "+ message.date);
 			}
-			row.add("date " + message.date);
-			row.add("msg " +  message.message);
+			//row.add("date " + message.date);
+			row.add(  message.message);
 			
 			dataTable.addRow(row);
 		}

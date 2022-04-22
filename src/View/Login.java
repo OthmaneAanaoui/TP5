@@ -9,8 +9,11 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.Arrays;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -42,7 +45,37 @@ public class Login extends JFrame{
 		
 		this.btnSignIn();
 		
+		
+		/*JButton btn = new JButton();
+
+		JFileChooser fileChooser = new JFileChooser("resources");
+
+		
+		btn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				int rep = fileChooser.showOpenDialog(null);
+				
+				if (rep == JFileChooser.APPROVE_OPTION) {
+					File file = fileChooser.getSelectedFile();
+					
+					 byte[] arr = new byte[(int)file.length()];
+					 
+					 System.out.print(Arrays.toString(arr));
+					 
+					 System.out.println(file.getName());
+					
+				}
+			}
+		});*/
+		
+		// container.add(btn, BorderLayout.NORTH);
+		
 		this.add(container);
+		
+
+		
 		
 		this.setSize(600, 300);
 	}
